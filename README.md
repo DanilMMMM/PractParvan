@@ -14,10 +14,40 @@
 ## 📌 Стек технологий
 - **Платформа:** .NET 9 (C#)
 - **Архитектура:** ASP.NET Core MVC
-- **База данных:** SQLite + Entity Framework Core 9
+- **СУБД / База данных:** PostgreSQL 18 (БД: `VetCLIN`) + Entity Framework Core 9 (`Npgsql.EntityFrameworkCore.PostgreSQL`)
+- **Инструменты администрирования БД:** pgAdmin 4, DBeaver
 - **Аутентификация:** Cookie-based Authentication с разделением прав доступа на основе ролей (`[Authorize(Roles = "...")]`)
 - **Безопасность:** Хеширование паролей PBKDF2 (SHA-256 с солью), защита от CSRF (`[ValidateAntiForgeryToken]`), валидация входных данных (`DataAnnotations` + jQuery Validation)
 - **Пользовательский интерфейс:** HTML5, CSS3, Bootstrap 5, Bootstrap Icons
+
+---
+
+## 🗄️ Настройки подключения к базе данных PostgreSQL
+
+База данных настраивается в файле `VetClinic/appsettings.json`:
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Host=localhost;Port=5432;Database=VetCLIN;Username=postgres;Password=postgres"
+}
+```
+
+### Структура таблиц в БД «VetCLIN» (схема `public`):
+1. **`Roles`** — роли пользователей (*Администратор*, *Ветеринар*, *Клиент*)
+2. **`Users`** — учётные записи пользователей, хэши паролей SHA-256, телефоны (+373)
+3. **`PetTypes`** — виды животных (*Собака*, *Кошка*, *Птица* и др.)
+4. **`Pets`** — питомцы (связь 1:M с таблицей `Users`)
+5. **`Services`** — перечень ветеринарных услуг и цены в молдавских леях (MDL)
+6. **`Visits`** — журнал приёмов (связывает клиента `ClientId`, врача `VeterinarianId`, питомца `PetId` и услугу `ServiceId`)
+
+### Как просматривать базу данных в DBeaver или pgAdmin 4:
+1. Создайте новое подключение к PostgreSQL в DBeaver:
+   * **Хост (Host):** `localhost`
+   * **Порт (Port):** `5432`
+   * **База данных (Database):** `VetCLIN`
+   * **Пользователь (Username):** `postgres`
+   * **Пароль (Password):** `postgres`
+2. Раскройте: `VetCLIN` ➔ `Схемы` ➔ `public` ➔ `Таблицы`.
+3. Откройте любую таблицу (например, `Pets`, `Visits`, `Users`) и перейдите во вкладку «Данные». При добавлении нового пациента через сайт данные мгновенно отображаются в таблице DBeaver/pgAdmin после нажатия кнопки «Обновить» (F5).
 
 ---
 
@@ -27,15 +57,14 @@
 1. Откройте файл решения `VetClinic.sln` в **Visual Studio 2022 / 2025**.
 2. Убедитесь, что выбран проект `VetClinic` в качестве запускаемого.
 3. Нажмите клавишу **F5** (или зелёную кнопку «Запуск»).
-4. База данных SQLite (`vetclinic.db`) создастся и наполнится тестовыми данными **автоматически** при первом запуске!
-5. Приложение откроется в браузере.
+4. Приложение автоматически подключится к PostgreSQL `VetCLIN` и запустится в браузере!
 
 ### Вариант 2: Через командную строку (CLI)
 ```bash
 cd VetClinic
 dotnet run
 ```
-После запуска откройте в браузере адрес: `http://localhost:5000` (или порт, указанный в консоли).
+После запуска откройте в браузере адрес: `http://localhost:5000`.
 
 ---
 

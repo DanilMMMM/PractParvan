@@ -5,11 +5,13 @@ using VetClinic.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Подключение базы данных SQLite
+// Подключение базы данных PostgreSQL
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
-    ?? "Data Source=vetclinic.db";
+    ?? "Host=localhost;Port=5432;Database=VetCLIN;Username=postgres;Password=postgres";
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(connectionString));
+    options.UseNpgsql(connectionString));
 
 // Регистрация сервисов
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
