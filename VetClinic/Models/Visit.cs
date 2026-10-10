@@ -52,7 +52,7 @@ public class Visit
     [Display(Name = "Заметки врача")]
     public string? DoctorNotes { get; set; }
 
-    [Display(Name = "Итоговая стоимость (руб.)")]
+    [Display(Name = "Итоговая стоимость (лей / MDL)")]
     [Range(0, 1000000)]
     public decimal TotalCost { get; set; }
 

@@ -18,7 +18,7 @@ public class Service
 
     [Required(ErrorMessage = "Укажите стоимость")]
     [Range(0, 1000000, ErrorMessage = "Стоимость не может быть отрицательной")]
-    [Display(Name = "Стоимость (руб.)")]
+    [Display(Name = "Стоимость (лей / MDL)")]
     public decimal Price { get; set; }
 
     [Required]

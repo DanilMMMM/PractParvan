@@ -24,14 +24,14 @@ public static class DbInitializer
         context.Roles.AddRange(adminRole, vetRole, clientRole);
         context.SaveChanges();
 
-        // 2. Пользователи
+        // 2. Пользователи (Кишинёв, Молдова)
         var adminUser = new User
         {
             Login = "admin",
             PasswordHash = passwordHasher.HashPassword("admin123"),
             FullName = "Администратор Клиники",
-            Email = "admin@vetclinic.ru",
-            Phone = "+7 (999) 111-22-33",
+            Email = "admin@vetcare.md",
+            Phone = "+373 (22) 85-35-35",
             RoleId = adminRole.Id,
             CreatedAt = DateTime.Now.AddMonths(-6)
         };
@@ -41,8 +41,8 @@ public static class DbInitializer
             Login = "vet_ivanov",
             PasswordHash = passwordHasher.HashPassword("vet123"),
             FullName = "Иванов Алексей Сергеевич",
-            Email = "ivanov@vetclinic.ru",
-            Phone = "+7 (999) 222-33-44",
+            Email = "ivanov@vetcare.md",
+            Phone = "+373 69 112 003",
             Specialization = "Ведущий хирург-ортопед",
             RoleId = vetRole.Id,
             CreatedAt = DateTime.Now.AddMonths(-5)
@@ -53,8 +53,8 @@ public static class DbInitializer
             Login = "vet_smirnova",
             PasswordHash = passwordHasher.HashPassword("vet123"),
             FullName = "Смирнова Елена Павловна",
-            Email = "smirnova@vetclinic.ru",
-            Phone = "+7 (999) 333-44-55",
+            Email = "smirnova@vetcare.md",
+            Phone = "+373 79 334 455",
             Specialization = "Терапевт, врач УЗИ-диагностики",
             RoleId = vetRole.Id,
             CreatedAt = DateTime.Now.AddMonths(-4)
@@ -64,9 +64,9 @@ public static class DbInitializer
         {
             Login = "client_danil",
             PasswordHash = passwordHasher.HashPassword("client123"),
-            FullName = "Макаренко Данил Сергеевич",
-            Email = "danil.makarenko@mail.ru",
-            Phone = "+7 (999) 444-55-66",
+            FullName = "Макаренко Данил Александрович",
+            Email = "danil.makarenko@gmail.com",
+            Phone = "+373 68 445 566",
             RoleId = clientRole.Id,
             CreatedAt = DateTime.Now.AddMonths(-3)
         };
@@ -77,7 +77,7 @@ public static class DbInitializer
             PasswordHash = passwordHasher.HashPassword("client123"),
             FullName = "Ковалёва Анна Дмитриевна",
             Email = "anna.kovaleva@mail.ru",
-            Phone = "+7 (999) 555-66-77",
+            Phone = "+373 60 556 677",
             RoleId = clientRole.Id,
             CreatedAt = DateTime.Now.AddMonths(-2)
         };
@@ -95,53 +95,53 @@ public static class DbInitializer
         context.PetTypes.AddRange(dogType, catType, birdType, rodentType, exoticType);
         context.SaveChanges();
 
-        // 4. Услуги
+        // 4. Услуги (Цены в молдавских леях - MDL)
         var s1 = new Service
         {
             Name = "Первичный клинический осмотр",
-            Description = "Комплексный осмотр питомца: сбор анамнеза, термометрия, пальпация, аускультация сердца и легких, консультация владельца.",
-            Price = 1200,
+            Description = "Комплексный осмотр питомца: сбор анамнеза, термометрия, аускультация сердца и лёгких, пальпация, консультация владельца.",
+            Price = 250,
             DurationMinutes = 30,
             IsActive = true
         };
         var s2 = new Service
         {
-            Name = "Комплексная вакцинация",
-            Description = "Вакцинация зарубежным препаратом с защитой от основных вирусных инфекций и бешенства с отметкой в ветеринарном паспорте.",
-            Price = 2500,
+            Name = "Комплексная вакцинация Nobivac + Rabies",
+            Description = "Вакцинация сертифицированным европейским препаратом с защитой от основных вирусных инфекций и бешенства с отметкой в международном ветеринарном паспорте.",
+            Price = 450,
             DurationMinutes = 20,
             IsActive = true
         };
         var s3 = new Service
         {
-            Name = "УЗИ брюшной полости",
-            Description = "Полное ультразвуковое исследование внутренних органов брюшной полости на аппарате экспертного класса с протоколом.",
-            Price = 2200,
+            Name = "УЗИ брюшной полости (экспертный класс)",
+            Description = "Полное ультразвуковое исследование внутренних органов брюшной полости с выдачей цветного медицинского протокола.",
+            Price = 380,
             DurationMinutes = 40,
             IsActive = true
         };
         var s4 = new Service
         {
             Name = "Электронное микрочипирование",
-            Description = "Безболезненная имплантация микрочипа под кожу и регистрация в международной базе данных AnimalFace.",
-            Price = 1800,
+            Description = "Безболезненная имплантация микрочипа по стандарту ISO 11784/11785 с регистрацией в международной базе Europetnet для выезда за границу.",
+            Price = 300,
             DurationMinutes = 15,
             IsActive = true
         };
         var s5 = new Service
         {
-            Name = "Ультразвуковая чистка зубов",
-            Description = "Удаление зубного камня и налета ультразвуковым скалером с последующей полировкой зубной эмали.",
-            Price = 3500,
+            Name = "Ультразвуковая санация ротовой полости",
+            Description = "Удаление зубного камня и налёта ультразвуковым скалером, полировка эмали пастами и обработка десен антисептиком.",
+            Price = 550,
             DurationMinutes = 60,
             IsActive = true
         };
         var s6 = new Service
         {
-            Name = "Клинический анализ крови",
-            Description = "Развернутый общий анализ крови на автоматическом анализаторе (результат в день обращения).",
-            Price = 1400,
-            DurationMinutes = 15,
+            Name = "Клинический и биохимический анализ крови",
+            Description = "Развёрнутый анализ крови на автоматическом лабораторном анализаторе (готовность результатов за 20 минут прямо во время приёма).",
+            Price = 220,
+            DurationMinutes = 20,
             IsActive = true
         };
 
@@ -158,7 +158,7 @@ public static class DbInitializer
             Gender = "Самец",
             Weight = 32.5,
             OwnerId = client1.Id,
-            MedicalNotes = "Непереносимость некоторых сухих кормов с курицей. Вакцинация по графику.",
+            MedicalNotes = "Непереносимость некоторых сухих кормов с курицей. Вакцинация по графику Europetnet.",
             CreatedAt = DateTime.Now.AddMonths(-3)
         };
 
@@ -213,7 +213,7 @@ public static class DbInitializer
             ServiceId = s1.Id,
             VisitDate = DateTime.Today.AddDays(-14).AddHours(11),
             Status = "Завершён",
-            Symptoms = "Легкая хромота на правую переднюю лапу после активной пробежки в парке.",
+            Symptoms = "Легкая хромота на правую переднюю лапу после активной пробежки в парке Рышкановка.",
             Diagnosis = "Растяжение связочного аппарата правого лучезапястного сустава лёгкой степени.",
             Treatment = "Ограничение активных нагрузок на 7 дней. Назначен мелоксидил 1.5 мг 1 раз в сутки с пищей в течение 4 дней.",
             DoctorNotes = "Повторный осмотр при сохранении симптомов через неделю. Рекомендован ортопедический покой.",
@@ -232,7 +232,7 @@ public static class DbInitializer
             Symptoms = "Плановая ежегодная вакцинация кота.",
             Diagnosis = "Клинически здоров, противопоказаний к вакцинации нет.",
             Treatment = "Введена вакцина Nobivac Tricat Trio + Nobivac Rabies. Побочных реакций не наблюдалось.",
-            DoctorNotes = "Сделать отметку в ветпаспорте. Следующая ревакцинация через 12 месяцев.",
+            DoctorNotes = "Сделать отметку в ветеринарном паспорте. Следующая ревакцинация через 12 месяцев.",
             TotalCost = s2.Price,
             CreatedAt = DateTime.Today.AddDays(-8)
         };

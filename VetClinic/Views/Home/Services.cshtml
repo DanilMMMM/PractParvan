@@ -21,9 +21,9 @@
         <div class="col-md-4">
             <div class="input-group">
                 <span class="input-group-text bg-white"><i class="bi bi-cash-stack"></i> До</span>
-                <input type="number" name="maxPrice" class="form-control" placeholder="Макс. цена (руб.)" 
-                       value="@ViewBag.MaxPrice" step="100" min="0" />
-                <span class="input-group-text bg-white">₽</span>
+                <input type="number" name="maxPrice" class="form-control" placeholder="Макс. цена (MDL / лей)" 
+                       value="@ViewBag.MaxPrice" step="50" min="0" />
+                <span class="input-group-text bg-white">MDL</span>
             </div>
         </div>
         <div class="col-md-3 d-flex gap-2">
@@ -63,7 +63,7 @@
                         <p class="text-secondary small mb-3">@s.Description</p>
                     </div>
                     <div class="d-flex justify-content-between align-items-center pt-3 border-top">
-                        <span class="fs-4 fw-bold text-dark">@s.Price.ToString("N0") ₽</span>
+                        <span class="fs-4 fw-bold text-dark">@s.Price.ToString("N0") MDL</span>
                         <a asp-controller="Visits" asp-action="Create" asp-route-serviceId="@s.Id" class="btn btn-teal btn-sm">
                             <i class="bi bi-calendar2-plus me-1"></i> Записаться
                         </a>

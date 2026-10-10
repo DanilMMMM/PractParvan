@@ -326,7 +326,7 @@ public class VisitsController : Controller
             .Select(s => new
             {
                 s.Id,
-                DisplayName = $"{s.Name} — {s.Price:N0} руб. ({s.DurationMinutes} мин)"
+                DisplayName = $"{s.Name} — {s.Price:N0} MDL ({s.DurationMinutes} мин)"
             }).ToListAsync();
 
         ViewBag.PetId = new SelectList(pets, "Id", "DisplayName");
