@@ -4,15 +4,15 @@
     ViewData["Title"] = isClient ? "Мои питомцы" : "База пациентов (питомцы)";
 }
 
-<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
     <div>
         <h2 class="fw-bold text-dark mb-1">
-            <i class="bi bi-heart-pulse text-danger me-2"></i>
+            <i class="bi bi-heart-pulse-fill text-danger me-2"></i>
             @(isClient ? "Мои любимые питомцы" : "Реестр животных (пациенты клиники)")
         </h2>
         <p class="text-secondary small mb-0">
             @(isClient ? "Управляйте данными своих животных, просматривайте медицинскую историю и назначения врачей." 
-                       : "Полная база пациентов клиники, электронные медкнижки и история приёмов.")
+                       : "Полная картотека пациентов клиники, электронные медкнижки и протоколы осмотров.")
         </p>
     </div>
     <div>
@@ -53,18 +53,18 @@
 {
     <div class="card card-custom p-5 bg-white text-center border">
         <i class="bi bi-emoji-neutral fs-1 text-muted mb-2"></i>
-        <h4 class="text-secondary">Питомцы не найдены</h4>
-        <p class="text-muted small">Добавьте питомца или измените параметры поиска</p>
+        <h4 class="text-secondary fw-bold">Питомцы не найдены</h4>
+        <p class="text-muted small">Добавьте питомца или измените параметры поискового фильтра</p>
         <div class="mt-2">
             <a asp-action="Create" class="btn btn-teal btn-sm">
-                <i class="bi bi-plus-circle me-1"></i> Добавить первого питомца
+                <i class="bi bi-plus-circle me-1"></i> Добавить нового питомца
             </a>
         </div>
     </div>
 }
 else
 {
-    <div class="row g-3">
+    <div class="row g-4">
         @foreach (var pet in Model)
         {
             var iconClass = pet.PetType?.Name switch
@@ -77,36 +77,38 @@ else
             };
 
             <div class="col-md-6 col-lg-4">
-                <div class="card card-custom h-100 bg-white p-3 border d-flex flex-column justify-content-between">
+                <div class="card card-custom card-interactive h-100 bg-white p-4 d-flex flex-column justify-content-between">
                     <div>
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="rounded-circle bg-light text-teal d-flex align-items-center justify-content-center p-2 fs-4" style="color: #0d9488;">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="pet-avatar">
                                     <i class="bi @iconClass"></i>
                                 </div>
                                 <div>
-                                    <h5 class="fw-bold text-dark mb-0">@pet.Name</h5>
-                                    <span class="badge bg-light text-dark border">@pet.PetType?.Name</span>
-                                    <span class="badge bg-secondary-subtle text-secondary">@pet.Gender</span>
+                                    <h4 class="fw-bold text-dark mb-0">@pet.Name</h4>
+                                    <div class="d-flex gap-1 mt-1">
+                                        <span class="badge bg-light text-dark border">@pet.PetType?.Name</span>
+                                        <span class="badge bg-secondary-subtle text-secondary">@pet.Gender</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <ul class="list-unstyled small text-secondary mt-3 mb-3">
-                            <li class="mb-1"><i class="bi bi-tag me-2 text-muted"></i><strong>Порода:</strong> @(pet.Breed ?? "Метис / беспородный")</li>
-                            <li class="mb-1"><i class="bi bi-hourglass-split me-2 text-muted"></i><strong>Возраст:</strong> @pet.AgeDisplay</li>
-                            <li class="mb-1"><i class="bi bi-speedometer2 me-2 text-muted"></i><strong>Вес:</strong> @(pet.Weight.HasValue ? $"{pet.Weight.Value} кг" : "Не указан")</li>
-                            
+                        <ul class="list-unstyled small text-secondary mb-3">
+                            <li class="mb-2"><i class="bi bi-tag text-emerald me-2" style="color: #059669;"></i><strong>Порода:</strong> @(pet.Breed ?? "Метис / беспородный")</li>
+                            <li class="mb-2"><i class="bi bi-hourglass-split text-emerald me-2" style="color: #059669;"></i><strong>Возраст:</strong> <span class="fw-bold text-dark">@pet.AgeDisplay</span></li>
+                            <li class="mb-2"><i class="bi bi-speedometer2 text-emerald me-2" style="color: #059669;"></i><strong>Вес:</strong> @(pet.Weight.HasValue ? $"{pet.Weight.Value} кг" : "Не указан")</li>
+
                             @if (!isClient)
                             {
-                                <li class="mb-1"><i class="bi bi-person me-2 text-muted"></i><strong>Владелец:</strong> @(pet.Owner?.FullName ?? "—") (@pet.Owner?.Phone)</li>
+                                <li class="mb-2"><i class="bi bi-person text-primary me-2"></i><strong>Владелец:</strong> @(pet.Owner?.FullName ?? "—") (@pet.Owner?.Phone)</li>
                             }
 
                             @if (!string.IsNullOrWhiteSpace(pet.MedicalNotes))
                             {
-                                <li class="mt-2 p-2 bg-light rounded text-dark border">
-                                    <i class="bi bi-info-circle text-primary me-1"></i>
-                                    <strong>Особенности:</strong> @(pet.MedicalNotes.Length > 60 ? pet.MedicalNotes.Substring(0, 57) + "..." : pet.MedicalNotes)
+                                <li class="mt-2 p-2 rounded-3 text-dark border small" style="background: #f8fafc;">
+                                    <i class="bi bi-info-circle-fill text-primary me-1"></i>
+                                    <strong>Особенности:</strong> @(pet.MedicalNotes.Length > 65 ? pet.MedicalNotes.Substring(0, 62) + "..." : pet.MedicalNotes)
                                 </li>
                             }
                         </ul>
@@ -118,7 +120,7 @@ else
                         </a>
                         <div class="d-flex gap-1">
                             <a asp-controller="Visits" asp-action="Create" asp-route-petId="@pet.Id" class="btn btn-sm btn-light border" title="Записать на приём">
-                                <i class="bi bi-calendar-plus text-primary"></i>
+                                <i class="bi bi-calendar2-plus text-emerald" style="color: #059669;"></i>
                             </a>
                             <a asp-action="Edit" asp-route-id="@pet.Id" class="btn btn-sm btn-light border" title="Редактировать">
                                 <i class="bi bi-pencil text-warning"></i>

@@ -4,40 +4,56 @@
     var doctors = ViewBag.Doctors as List<VetClinic.Models.User> ?? new List<VetClinic.Models.User>();
 }
 
-<!-- Hero Section -->
-<div class="p-5 mb-4 bg-white rounded-3 shadow-sm border border-light">
-    <div class="container-fluid py-4">
-        <div class="row align-items-center">
-            <div class="col-lg-7">
-                <span class="badge bg-teal text-white mb-2 px-3 py-2" style="background-color: #0d9488;">
-                    <i class="bi bi-shield-check me-1"></i> Лицензированная ветеринарная клиника
-                </span>
-                <h1 class="display-5 fw-bold text-dark mt-2 mb-3">Забота и здоровье ваших любимых питомцев</h1>
-                <p class="lead text-secondary mb-4">
-                    Круглосуточная квалифицированная помощь, современное диагностическое оборудование,
-                    индивидуальный подход к каждому четвероногому пациенту и личный кабинет для владельцев.
-                </p>
-                <div class="d-flex flex-wrap gap-2">
-                    <a asp-controller="Visits" asp-action="Create" class="btn btn-teal btn-lg px-4 shadow-sm">
-                        <i class="bi bi-calendar2-plus me-1"></i> Записаться на приём
-                    </a>
-                    <a asp-controller="Home" asp-action="Services" class="btn btn-outline-secondary btn-lg px-4">
-                        <i class="bi bi-card-text me-1"></i> Прейскурант услуг
-                    </a>
-                </div>
+<!-- Modern Hero Section -->
+<div class="hero-banner mb-5">
+    <div class="row align-items-center">
+        <div class="col-lg-7">
+            <div class="hero-pill mb-3">
+                <i class="bi bi-shield-check"></i>
+                <span>Инновационный ветеринарный центр &bull; 24/7</span>
             </div>
-            <div class="col-lg-5 text-center mt-4 mt-lg-0">
-                <div class="p-4 bg-light rounded-4 border">
-                    <div class="display-1 text-teal mb-2" style="color: #0d9488;">
+            <h1 class="hero-title">
+                Экспертная забота о <span class="text-gradient-emerald">здоровье</span> ваших питомцев
+            </h1>
+            <p class="lead text-light opacity-75 mb-4" style="max-width: 580px; font-size: 1.1rem; line-height: 1.6;">
+                Круглосуточный приём, экспертная хирургия, электронные медицинские карты и личный кабинет владельца для контроля всех визитов и назначений.
+            </p>
+            <div class="d-flex flex-wrap gap-3">
+                <a asp-controller="Visits" asp-action="Create" class="btn btn-teal btn-lg px-4 shadow">
+                    <i class="bi bi-calendar2-plus me-2"></i> Записаться онлайн
+                </a>
+                <a asp-controller="Home" asp-action="Services" class="btn btn-dark-glass btn-lg px-4">
+                    <i class="bi bi-card-checklist me-2"></i> Каталог услуг и цены
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-5 mt-4 mt-lg-0">
+            <div class="hero-card-glass">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <span class="brand-icon-wrapper" style="width: 48px; height: 48px; font-size: 1.5rem;">
                         <i class="bi bi-hospital"></i>
+                    </span>
+                    <div>
+                        <h5 class="fw-bold text-white mb-0">ВетЗабота &bull; Клиника</h5>
+                        <small class="text-emerald" style="color: #34d399;"><i class="bi bi-dot"></i> Система онлайн-учёта</small>
                     </div>
-                    <h4 class="fw-bold text-dark">«ВетЗабота»</h4>
-                    <p class="text-muted small mb-0">Система учёта животных, электронных медкнижек и визитов</p>
-                    <hr class="my-3">
-                    <div class="text-start small text-secondary">
-                        <div class="mb-1"><i class="bi bi-check2-circle text-success me-2"></i>Электронная медкарта каждого питомца</div>
-                        <div class="mb-1"><i class="bi bi-check2-circle text-success me-2"></i>История назначений и диагнозов</div>
-                        <div><i class="bi bi-check2-circle text-success me-2"></i>Удобная онлайн-запись к профильным врачам</div>
+                </div>
+                <p class="text-light opacity-75 small mb-3">
+                    Все данные о здоровье, прививках и процедурах сохраняются в единой защищённой базе данных клиники.
+                </p>
+                <div class="d-flex flex-column gap-2 small">
+                    <div class="d-flex align-items-center gap-2 p-2 rounded-3" style="background: rgba(255,255,255,0.05);">
+                        <i class="bi bi-check-circle-fill text-emerald" style="color: #34d399;"></i>
+                        <span>Электронная медкарта каждого животного</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2 p-2 rounded-3" style="background: rgba(255,255,255,0.05);">
+                        <i class="bi bi-check-circle-fill text-emerald" style="color: #34d399;"></i>
+                        <span>Протоколы осмотра с печатью и подписью врача</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2 p-2 rounded-3" style="background: rgba(255,255,255,0.05);">
+                        <i class="bi bi-check-circle-fill text-emerald" style="color: #34d399;"></i>
+                        <span>Удобный доступ для клиентов и докторов</span>
                     </div>
                 </div>
             </div>
@@ -45,43 +61,63 @@
     </div>
 </div>
 
-<!-- Metrics Counters -->
+<!-- Modern Stat Boxes -->
 <div class="row g-3 mb-5">
     <div class="col-6 col-md-3">
-        <div class="card card-custom p-3 text-center bg-white">
-            <h2 class="fw-bold text-teal mb-0" style="color: #0d9488;">@ViewBag.TotalPetsCount</h2>
-            <p class="text-muted small mb-0 mt-1"><i class="bi bi-heart me-1"></i> Питомцев в базе</p>
+        <div class="stat-box d-flex align-items-center gap-3">
+            <div class="stat-icon stat-icon-emerald">
+                <i class="bi bi-github"></i>
+            </div>
+            <div>
+                <h3 class="fw-bold mb-0 text-dark">@ViewBag.TotalPetsCount</h3>
+                <small class="text-secondary fw-semibold">Пациентов в базе</small>
+            </div>
         </div>
     </div>
     <div class="col-6 col-md-3">
-        <div class="card card-custom p-3 text-center bg-white">
-            <h2 class="fw-bold text-primary mb-0">@ViewBag.TotalVisitsCount</h2>
-            <p class="text-muted small mb-0 mt-1"><i class="bi bi-clipboard2-pulse me-1"></i> Приёмов проведено</p>
+        <div class="stat-box d-flex align-items-center gap-3">
+            <div class="stat-icon stat-icon-indigo">
+                <i class="bi bi-clipboard2-pulse"></i>
+            </div>
+            <div>
+                <h3 class="fw-bold mb-0 text-dark">@ViewBag.TotalVisitsCount</h3>
+                <small class="text-secondary fw-semibold">Приёмов проведено</small>
+            </div>
         </div>
     </div>
     <div class="col-6 col-md-3">
-        <div class="card card-custom p-3 text-center bg-white">
-            <h2 class="fw-bold text-success mb-0">@ViewBag.TotalClientsCount</h2>
-            <p class="text-muted small mb-0 mt-1"><i class="bi bi-people me-1"></i> Довольных клиентов</p>
+        <div class="stat-box d-flex align-items-center gap-3">
+            <div class="stat-icon stat-icon-amber">
+                <i class="bi bi-people"></i>
+            </div>
+            <div>
+                <h3 class="fw-bold mb-0 text-dark">@ViewBag.TotalClientsCount</h3>
+                <small class="text-secondary fw-semibold">Владельцев животных</small>
+            </div>
         </div>
     </div>
     <div class="col-6 col-md-3">
-        <div class="card card-custom p-3 text-center bg-white">
-            <h2 class="fw-bold text-warning mb-0">24/7</h2>
-            <p class="text-muted small mb-0 mt-1"><i class="bi bi-clock-history me-1"></i> Приём и стационар</p>
+        <div class="stat-box d-flex align-items-center gap-3">
+            <div class="stat-icon stat-icon-rose">
+                <i class="bi bi-clock-history"></i>
+            </div>
+            <div>
+                <h3 class="fw-bold mb-0 text-dark">24 / 7</h3>
+                <small class="text-secondary fw-semibold">Круглосуточный стационар</small>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Services Section -->
+<!-- Popular Services Grid -->
 <div class="mb-5">
     <div class="d-flex justify-content-between align-items-end mb-4">
         <div>
-            <span class="text-uppercase fw-semibold text-muted small">Наши услуги</span>
+            <span class="text-uppercase fw-bold text-emerald small" style="color: #059669; letter-spacing: 0.05em;">Прейскурант</span>
             <h2 class="fw-bold text-dark mb-0">Популярные направления лечения</h2>
         </div>
-        <a asp-controller="Home" asp-action="Services" class="text-decoration-none fw-semibold" style="color: #0d9488;">
-            Все услуги клиники <i class="bi bi-arrow-right"></i>
+        <a asp-controller="Home" asp-action="Services" class="btn btn-outline-teal btn-sm">
+            Все услуги <i class="bi bi-arrow-right ms-1"></i>
         </a>
     </div>
 
@@ -89,20 +125,21 @@
         @foreach (var s in Model)
         {
             <div class="col-md-6 col-lg-4">
-                <div class="card card-custom h-100 p-3 bg-white d-flex flex-column justify-content-between">
+                <div class="card card-custom card-interactive h-100 p-4 d-flex flex-column justify-content-between">
                     <div>
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h5 class="fw-bold text-dark mb-0">@s.Name</h5>
-                            <span class="badge bg-light text-dark border">
-                                <i class="bi bi-clock me-1"></i> @s.DurationMinutes мин
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="badge bg-light text-secondary border rounded-pill px-3 py-2">
+                                <i class="bi bi-stopwatch me-1"></i> @s.DurationMinutes мин
                             </span>
+                            <span class="fs-4 fw-bold text-dark">@s.Price.ToString("N0") ₽</span>
                         </div>
-                        <p class="text-muted small mb-3">@s.Description</p>
+                        <h5 class="fw-bold text-dark mb-2">@s.Name</h5>
+                        <p class="text-secondary small mb-3" style="line-height: 1.6;">@s.Description</p>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
-                        <span class="fs-5 fw-bold text-dark">@s.Price.ToString("N0") ₽</span>
-                        <a asp-controller="Visits" asp-action="Create" asp-route-serviceId="@s.Id" class="btn btn-sm btn-outline-teal">
-                            <i class="bi bi-calendar-plus me-1"></i> Записаться
+                    <div class="pt-3 border-top d-flex justify-content-between align-items-center">
+                        <span class="small text-muted"><i class="bi bi-shield-check text-success me-1"></i> Гарантия стерильности</span>
+                        <a asp-controller="Visits" asp-action="Create" asp-route-serviceId="@s.Id" class="btn btn-sm btn-teal">
+                            Записаться
                         </a>
                     </div>
                 </div>
@@ -111,33 +148,32 @@
     </div>
 </div>
 
-<!-- Doctors Section -->
+<!-- Doctors Team Section -->
 <div class="mb-5">
     <div class="mb-4">
-        <span class="text-uppercase fw-semibold text-muted small">Наша команда</span>
-        <h2 class="fw-bold text-dark mb-0">Ветеринарные врачи и специалисты</h2>
+        <span class="text-uppercase fw-bold text-emerald small" style="color: #059669; letter-spacing: 0.05em;">Специалисты</span>
+        <h2 class="fw-bold text-dark mb-0">Ветеринарные врачи клиники</h2>
     </div>
 
     <div class="row g-4">
         @foreach (var doc in doctors)
         {
             <div class="col-md-6">
-                <div class="card card-custom p-4 bg-white">
+                <div class="card card-custom p-4">
                     <div class="d-flex align-items-center gap-3">
-                        <div class="rounded-circle bg-teal text-white d-flex align-items-center justify-content-center" 
-                             style="width: 65px; height: 65px; background-color: #0d9488; font-size: 1.8rem;">
-                            <i class="bi bi-person-badge"></i>
+                        <div class="doctor-avatar">
+                            <i class="bi bi-person-badge-fill"></i>
                         </div>
                         <div>
                             <h5 class="fw-bold mb-1 text-dark">@doc.FullName</h5>
-                            <span class="badge bg-primary text-white mb-1">
-                                @(doc.Specialization ?? "Ветеринарный врач общей практики")
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill mb-2 px-3 py-1">
+                                @(doc.Specialization ?? "Ветеринарный врач")
                             </span>
-                            <div class="text-muted small">
-                                <i class="bi bi-envelope me-1"></i> @doc.Email
+                            <div class="text-secondary small">
+                                <div><i class="bi bi-envelope me-1 text-muted"></i> @doc.Email</div>
                                 @if (!string.IsNullOrEmpty(doc.Phone))
                                 {
-                                    <span class="ms-2"><i class="bi bi-telephone me-1"></i> @doc.Phone</span>
+                                    <div><i class="bi bi-telephone me-1 text-muted"></i> @doc.Phone</div>
                                 }
                             </div>
                         </div>
@@ -148,47 +184,50 @@
     </div>
 </div>
 
-<!-- Why Choose Us -->
-<div class="p-4 p-md-5 rounded-4 bg-white shadow-sm mb-5">
+<!-- Trust Banner -->
+<div class="p-4 p-md-5 rounded-4 bg-white border shadow-sm mb-5">
     <div class="row g-4 align-items-center">
-        <div class="col-lg-6">
-            <span class="text-uppercase fw-semibold text-muted small">Преимущества</span>
-            <h3 class="fw-bold mb-3">Почему владельцы доверяют здоровье питомцев нам?</h3>
-            <ul class="list-unstyled mb-0">
-                <li class="d-flex align-items-start mb-3">
-                    <i class="bi bi-check-circle-fill text-success fs-5 me-3"></i>
+        <div class="col-lg-7">
+            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill mb-2">
+                Fear Free стандарт
+            </span>
+            <h3 class="fw-bold mb-3">Почему владельцы выбирают «ВетЗабота»?</h3>
+            <div class="d-flex flex-column gap-3">
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-check2-circle fs-4 text-emerald" style="color: #059669;"></i>
                     <div>
-                        <strong class="text-dark">Собственная экспресс-лаборатория</strong>
-                        <p class="text-muted small mb-0">Результаты общих и биохимических анализов готовы в течение 30 минут.</p>
+                        <strong class="text-dark">Собственная цифровая лаборатория</strong>
+                        <p class="text-secondary small mb-0">Клинический и биохимический анализ крови за 20 минут прямо на приёме.</p>
                     </div>
-                </li>
-                <li class="d-flex align-items-start mb-3">
-                    <i class="bi bi-check-circle-fill text-success fs-5 me-3"></i>
+                </div>
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-check2-circle fs-4 text-emerald" style="color: #059669;"></i>
                     <div>
-                        <strong class="text-dark">Бережный приём без стресса (Fear Free)</strong>
-                        <p class="text-muted small mb-0">Специальные методики обращения с кошками и собаками снижают тревожность при осмотре.</p>
+                        <strong class="text-dark">Бережный осмотр без стресса</strong>
+                        <p class="text-secondary small mb-0">Специальные протоколы обращения минимизируют волнение собак и кошек.</p>
                     </div>
-                </li>
-                <li class="d-flex align-items-start">
-                    <i class="bi bi-check-circle-fill text-success fs-5 me-3"></i>
+                </div>
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-check2-circle fs-4 text-emerald" style="color: #059669;"></i>
                     <div>
-                        <strong class="text-dark">Прозрачная медицинская история</strong>
-                        <p class="text-muted small mb-0">Вся информация о приёмах, вакцинациях и лечении доступна онлайн в личном кабинете.</p>
+                        <strong class="text-dark">Электронная история болезни</strong>
+                        <p class="text-secondary small mb-0">Все рекомендации, препараты и протоколы сохраняются в личном кабинете.</p>
                     </div>
-                </li>
-            </ul>
+                </div>
+            </div>
         </div>
-        <div class="col-lg-6">
-            <div class="p-4 rounded-3 border bg-light text-center">
-                <i class="bi bi-calendar-event fs-1 text-teal" style="color: #0d9488;"></i>
-                <h4 class="fw-bold mt-2">Нужна консультация ветеринара?</h4>
-                <p class="text-secondary small mb-3">Запишитесь на удобное время через сайт или обратитесь в регистратуру</p>
-                <div class="d-grid gap-2 col-md-8 mx-auto">
+
+        <div class="col-lg-5">
+            <div class="p-4 rounded-4 text-center border" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);">
+                <i class="bi bi-calendar-heart fs-1 text-emerald mb-2 d-inline-block" style="color: #10b981;"></i>
+                <h5 class="fw-bold text-dark">Запишите питомца на приём</h5>
+                <p class="text-secondary small mb-4">Выберите удобное время в несколько кликов</p>
+                <div class="d-grid gap-2">
                     <a asp-controller="Visits" asp-action="Create" class="btn btn-teal">
-                        <i class="bi bi-pen me-1"></i> Оформить запись онлайн
+                        <i class="bi bi-pencil-square me-1"></i> Оформить запись
                     </a>
                     <a href="tel:+79005553535" class="btn btn-outline-secondary">
-                        <i class="bi bi-telephone me-1"></i> Позвонить в клинику
+                        <i class="bi bi-telephone me-1"></i> Позвонить в регистратуру
                     </a>
                 </div>
             </div>

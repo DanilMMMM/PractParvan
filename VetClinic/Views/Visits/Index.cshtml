@@ -6,14 +6,14 @@
     ViewData["Title"] = isClient ? "Мои записи на приём" : "Журнал приёмов клиники";
 }
 
-<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
     <div>
         <h2 class="fw-bold text-dark mb-1">
-            <i class="bi bi-calendar-check text-teal me-2" style="color: #0d9488;"></i>
+            <i class="bi bi-calendar2-check-fill text-emerald me-2" style="color: #059669;"></i>
             @(isClient ? "Мои записи и приёмы" : (isVet ? "Моё расписание и приёмы" : "Журнал всех приёмов клиники"))
         </h2>
         <p class="text-secondary small mb-0">
-            Фильтрация по датам, статусам процедур, поиск по пациентам и диагнозам.
+            Электронное расписание, фильтрация по датам и статусам, фиксация диагнозов и счетов.
         </p>
     </div>
     <div>
@@ -27,7 +27,7 @@
 <div class="card card-custom p-3 bg-white mb-4 border">
     <form method="get" asp-action="Index" class="row g-2 align-items-end">
         <div class="col-md-3">
-            <label class="form-label text-muted small fw-semibold">Поиск</label>
+            <label class="form-label text-secondary small fw-semibold">Поиск</label>
             <div class="input-group input-group-sm">
                 <span class="input-group-text"><i class="bi bi-search"></i></span>
                 <input type="text" name="search" class="form-control" placeholder="Кличка, диагноз, клиент..." value="@ViewBag.Search" />
@@ -35,7 +35,7 @@
         </div>
 
         <div class="col-md-2">
-            <label class="form-label text-muted small fw-semibold">Статус</label>
+            <label class="form-label text-secondary small fw-semibold">Статус</label>
             <select name="status" class="form-select form-select-sm">
                 <option value="">Все статусы</option>
                 <option value="Запланирован" selected="@(ViewBag.Status == "Запланирован")">Запланирован</option>
@@ -46,19 +46,19 @@
         </div>
 
         <div class="col-md-2">
-            <label class="form-label text-muted small fw-semibold">Дата с</label>
+            <label class="form-label text-secondary small fw-semibold">Дата с</label>
             <input type="date" name="dateFrom" class="form-control form-control-sm" value="@ViewBag.DateFrom" />
         </div>
 
         <div class="col-md-2">
-            <label class="form-label text-muted small fw-semibold">Дата по</label>
+            <label class="form-label text-secondary small fw-semibold">Дата по</label>
             <input type="date" name="dateTo" class="form-control form-control-sm" value="@ViewBag.DateTo" />
         </div>
 
         @if (isAdmin)
         {
             <div class="col-md-2">
-                <label class="form-label text-muted small fw-semibold">Ветеринар</label>
+                <label class="form-label text-secondary small fw-semibold">Ветеринар</label>
                 <select name="vetId" class="form-select form-select-sm" asp-items="ViewBag.Vets">
                     <option value="">Все врачи</option>
                 </select>
@@ -80,17 +80,17 @@
 <div class="card card-custom bg-white border overflow-hidden">
     @if (!Model.Any())
     {
-        <div class="p-5 text-center text-muted">
-            <i class="bi bi-calendar-x fs-1 mb-2"></i>
-            <h5>Приёмы не найдены</h5>
-            <p class="small mb-0">Попробуйте изменить параметры поиска или создайте новую запись</p>
+        <div class="p-5 text-center text-secondary">
+            <i class="bi bi-calendar-x fs-1 mb-2 text-muted"></i>
+            <h5 class="fw-bold">Приёмы не найдены</h5>
+            <p class="small mb-0">Попробуйте изменить параметры фильтрации или оформите новую запись</p>
         </div>
     }
     else
     {
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
-                <thead class="table-light small text-uppercase text-secondary">
+                <thead>
                     <tr>
                         <th>Дата и время</th>
                         <th>Статус</th>
@@ -111,46 +111,64 @@
                 <tbody>
                     @foreach (var v in Model)
                     {
+                        var statusClass = v.Status switch
+                        {
+                            "Завершён" => "badge-status-completed",
+                            "Запланирован" => "badge-status-planned",
+                            "В процессе" => "badge-status-process",
+                            _ => "badge-status-cancelled"
+                        };
+
+                        var statusDot = v.Status switch
+                        {
+                            "Завершён" => "bi-check-circle-fill text-success",
+                            "Запланирован" => "bi-clock-fill text-warning",
+                            "В процессе" => "bi-arrow-repeat text-primary",
+                            _ => "bi-x-circle-fill text-danger"
+                        };
+
                         <tr>
                             <td>
                                 <strong class="d-block text-dark">@v.VisitDate.ToString("dd.MM.yyyy")</strong>
                                 <span class="badge bg-light text-dark border">
-                                    <i class="bi bi-clock me-1"></i>@v.VisitDate.ToString("HH:mm")
+                                    <i class="bi bi-clock me-1 text-muted"></i>@v.VisitDate.ToString("HH:mm")
                                 </span>
                             </td>
                             <td>
-                                <span class="badge @v.StatusBadgeClass">@v.Status</span>
+                                <span class="badge-pill-status @statusClass">
+                                    <i class="bi @statusDot"></i> @v.Status
+                                </span>
                             </td>
                             <td>
-                                <a asp-controller="Pets" asp-action="Details" asp-route-id="@v.PetId" class="fw-bold text-teal text-decoration-none" style="color: #0d9488;">
+                                <a asp-controller="Pets" asp-action="Details" asp-route-id="@v.PetId" class="fw-bold text-decoration-none" style="color: #059669;">
                                     @v.Pet?.Name
                                 </a>
-                                <small class="d-block text-muted">@(v.Pet?.Breed ?? "Питомец")</small>
+                                <small class="d-block text-secondary">@(v.Pet?.Breed ?? "Питомец")</small>
                             </td>
                             @if (!isClient)
                             {
                                 <td>
                                     <span class="d-block fw-semibold text-dark">@v.Client?.FullName</span>
-                                    <small class="text-muted">@v.Client?.Phone</small>
+                                    <small class="text-secondary">@v.Client?.Phone</small>
                                 </td>
                             }
                             @if (isClient || isAdmin)
                             {
                                 <td>
                                     <span class="d-block fw-semibold text-dark">@v.Veterinarian?.FullName</span>
-                                    <small class="text-muted">@(v.Veterinarian?.Specialization ?? "Ветеринар")</small>
+                                    <small class="text-secondary">@(v.Veterinarian?.Specialization ?? "Ветеринар")</small>
                                 </td>
                             }
                             <td>
-                                <span class="d-block text-dark small">@v.Service?.Name</span>
+                                <span class="d-block text-dark small fw-medium">@v.Service?.Name</span>
                             </td>
                             <td>
-                                <strong class="text-dark">@v.TotalCost.ToString("N0") ₽</strong>
+                                <strong class="text-dark fs-6">@v.TotalCost.ToString("N0") ₽</strong>
                             </td>
                             <td class="text-end">
                                 <div class="btn-group btn-group-sm">
-                                    <a asp-action="Details" asp-route-id="@v.Id" class="btn btn-outline-secondary" title="Протокол приёма">
-                                        <i class="bi bi-file-earmark-text"></i>
+                                    <a asp-action="Details" asp-route-id="@v.Id" class="btn btn-light border" title="Протокол приёма">
+                                        <i class="bi bi-file-earmark-text text-secondary"></i>
                                     </a>
 
                                     @if ((isVet || isAdmin) && v.Status != "Завершён" && v.Status != "Отменён")

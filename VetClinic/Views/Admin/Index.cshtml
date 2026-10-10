@@ -3,82 +3,74 @@
     ViewData["Title"] = "Панель администратора";
 }
 
-<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
     <div>
         <h2 class="fw-bold text-dark mb-1">
-            <i class="bi bi-speedometer2 text-danger me-2"></i> Панель администратора
+            <i class="bi bi-speedometer2 text-danger me-2"></i> Панель управления клиникой
         </h2>
-        <p class="text-secondary small mb-0">Сводные показатели клиники, оперативное управление персоналом, клиентами и услугами.</p>
+        <p class="text-secondary small mb-0">Сводные показатели, статистика приёмов, оперативное управление персоналом и каталогом услуг.</p>
     </div>
     <div class="d-flex gap-2">
-        <a asp-action="Users" class="btn btn-outline-primary">
-            <i class="bi bi-people me-1"></i> Пользователи
+        <a asp-action="Users" class="btn btn-outline-secondary">
+            <i class="bi bi-people me-1"></i> Пользователи (@Model.TotalUsers)
         </a>
-        <a asp-action="Services" class="btn btn-outline-success">
-            <i class="bi bi-tags me-1"></i> Услуги и цены
+        <a asp-action="Services" class="btn btn-teal">
+            <i class="bi bi-tags me-1"></i> Прейскурант услуг
         </a>
     </div>
 </div>
 
-<!-- Stats Metric Cards -->
+<!-- Modern Metric Cards -->
 <div class="row g-3 mb-4">
     <div class="col-sm-6 col-lg-3">
-        <div class="card card-custom p-3 bg-white border">
-            <div class="d-flex align-items-center justify-content-between">
-                <div>
-                    <span class="text-muted small fw-semibold">Пользователей</span>
-                    <h3 class="fw-bold text-dark mb-0">@Model.TotalUsers</h3>
-                    <small class="text-secondary">Клиентов: @Model.TotalClients | Врачей: @Model.TotalVets</small>
-                </div>
-                <div class="p-3 bg-primary-subtle text-primary rounded-circle fs-3">
+        <div class="card card-custom p-4 bg-white">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="text-secondary small fw-bold text-uppercase" style="letter-spacing: 0.05em;">Пользователи</span>
+                <div class="stat-icon stat-icon-indigo" style="width: 44px; height: 44px; font-size: 1.25rem;">
                     <i class="bi bi-people-fill"></i>
                 </div>
             </div>
+            <h2 class="fw-bold text-dark mb-1">@Model.TotalUsers</h2>
+            <small class="text-secondary">Клиентов: <strong>@Model.TotalClients</strong> &bull; Врачей: <strong>@Model.TotalVets</strong></small>
         </div>
     </div>
 
     <div class="col-sm-6 col-lg-3">
-        <div class="card card-custom p-3 bg-white border">
-            <div class="d-flex align-items-center justify-content-between">
-                <div>
-                    <span class="text-muted small fw-semibold">Пациентов (животных)</span>
-                    <h3 class="fw-bold text-teal mb-0" style="color: #0d9488;">@Model.TotalPets</h3>
-                    <small class="text-secondary">Зарегистрировано в базе</small>
-                </div>
-                <div class="p-3 bg-teal-subtle text-teal rounded-circle fs-3" style="background-color: #ccfbf1; color: #0f766e;">
+        <div class="card card-custom p-4 bg-white">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="text-secondary small fw-bold text-uppercase" style="letter-spacing: 0.05em;">Пациенты</span>
+                <div class="stat-icon stat-icon-emerald" style="width: 44px; height: 44px; font-size: 1.25rem;">
                     <i class="bi bi-heart-pulse-fill"></i>
                 </div>
             </div>
+            <h2 class="fw-bold mb-1" style="color: #059669;">@Model.TotalPets</h2>
+            <small class="text-secondary">Зарегистрированных питомцев</small>
         </div>
     </div>
 
     <div class="col-sm-6 col-lg-3">
-        <div class="card card-custom p-3 bg-white border">
-            <div class="d-flex align-items-center justify-content-between">
-                <div>
-                    <span class="text-muted small fw-semibold">Всего приёмов</span>
-                    <h3 class="fw-bold text-dark mb-0">@Model.TotalVisits</h3>
-                    <small class="text-secondary">Запланировано: @Model.PlannedVisits | Завершено: @Model.CompletedVisits</small>
-                </div>
-                <div class="p-3 bg-warning-subtle text-warning-emphasis rounded-circle fs-3">
+        <div class="card card-custom p-4 bg-white">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="text-secondary small fw-bold text-uppercase" style="letter-spacing: 0.05em;">Всего приёмов</span>
+                <div class="stat-icon stat-icon-amber" style="width: 44px; height: 44px; font-size: 1.25rem;">
                     <i class="bi bi-calendar-check-fill"></i>
                 </div>
             </div>
+            <h2 class="fw-bold text-dark mb-1">@Model.TotalVisits</h2>
+            <small class="text-secondary">Запланировано: <strong>@Model.PlannedVisits</strong> &bull; Завершено: <strong>@Model.CompletedVisits</strong></small>
         </div>
     </div>
 
     <div class="col-sm-6 col-lg-3">
-        <div class="card card-custom p-3 bg-white border">
-            <div class="d-flex align-items-center justify-content-between">
-                <div>
-                    <span class="text-muted small fw-semibold">Выручка клиники</span>
-                    <h3 class="fw-bold text-success mb-0">@Model.TotalRevenue.ToString("N0") ₽</h3>
-                    <small class="text-secondary">По завершённым визитам</small>
-                </div>
-                <div class="p-3 bg-success-subtle text-success rounded-circle fs-3">
-                    <i class="bi bi-cash-coin"></i>
+        <div class="card card-custom p-4 bg-white">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="text-secondary small fw-bold text-uppercase" style="letter-spacing: 0.05em;">Выручка</span>
+                <div class="stat-icon stat-icon-emerald" style="width: 44px; height: 44px; font-size: 1.25rem;">
+                    <i class="bi bi-cash-stack"></i>
                 </div>
             </div>
+            <h2 class="fw-bold text-dark mb-1">@Model.TotalRevenue.ToString("N0") ₽</h2>
+            <small class="text-secondary">По проведённым процедурам</small>
         </div>
     </div>
 </div>
@@ -87,14 +79,16 @@
 <div class="row g-4">
     <!-- Recent Visits -->
     <div class="col-lg-8">
-        <div class="card card-custom bg-white border p-3">
+        <div class="card card-custom bg-white border p-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-clock-history me-1 text-primary"></i> Последние приёмы</h5>
-                <a asp-controller="Visits" asp-action="Index" class="btn btn-sm btn-link text-decoration-none">Все приёмы &rarr;</a>
+                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-clock-history me-2 text-primary"></i> Последние приёмы клиники</h5>
+                <a asp-controller="Visits" asp-action="Index" class="btn btn-sm btn-link text-decoration-none fw-semibold" style="color: #059669;">
+                    Весь журнал &rarr;
+                </a>
             </div>
             <div class="table-responsive">
                 <table class="table table-hover table-sm align-middle mb-0">
-                    <thead class="table-light small">
+                    <thead>
                         <tr>
                             <th>Дата</th>
                             <th>Питомец</th>
@@ -107,17 +101,25 @@
                     <tbody>
                         @foreach (var v in Model.RecentVisits)
                         {
+                            var statusClass = v.Status switch
+                            {
+                                "Завершён" => "badge-status-completed",
+                                "Запланирован" => "badge-status-planned",
+                                "В процессе" => "badge-status-process",
+                                _ => "badge-status-cancelled"
+                            };
+
                             <tr>
-                                <td>@v.VisitDate.ToString("dd.MM.yy HH:mm")</td>
+                                <td class="small fw-semibold">@v.VisitDate.ToString("dd.MM.yy HH:mm")</td>
                                 <td>
-                                    <a asp-controller="Pets" asp-action="Details" asp-route-id="@v.PetId" class="text-decoration-none fw-semibold">
+                                    <a asp-controller="Pets" asp-action="Details" asp-route-id="@v.PetId" class="text-decoration-none fw-semibold" style="color: #059669;">
                                         @v.Pet?.Name
                                     </a>
                                 </td>
-                                <td>@v.Client?.FullName</td>
-                                <td>@v.Veterinarian?.FullName</td>
-                                <td><span class="badge @v.StatusBadgeClass">@v.Status</span></td>
-                                <td class="text-end fw-bold">@v.TotalCost.ToString("N0") ₽</td>
+                                <td class="small">@v.Client?.FullName</td>
+                                <td class="small">@v.Veterinarian?.FullName</td>
+                                <td><span class="badge-pill-status @statusClass small">@v.Status</span></td>
+                                <td class="text-end fw-bold small">@v.TotalCost.ToString("N0") ₽</td>
                             </tr>
                         }
                     </tbody>
@@ -128,20 +130,29 @@
 
     <!-- Recent Users -->
     <div class="col-lg-4">
-        <div class="card card-custom bg-white border p-3">
+        <div class="card card-custom bg-white border p-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-person-check me-1 text-success"></i> Новые пользователи</h5>
-                <a asp-action="Users" class="btn btn-sm btn-link text-decoration-none">Управление &rarr;</a>
+                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-person-check-fill me-2 text-success"></i> Новые пользователи</h5>
+                <a asp-action="Users" class="btn btn-sm btn-link text-decoration-none fw-semibold" style="color: #059669;">
+                    Управление &rarr;
+                </a>
             </div>
             <ul class="list-group list-group-flush">
                 @foreach (var u in Model.RecentUsers)
                 {
+                    var roleBadge = u.Role?.Name switch
+                    {
+                        "Администратор" => "badge-role-admin",
+                        "Ветеринар" => "badge-role-vet",
+                        _ => "badge-role-client"
+                    };
+
                     <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
                         <div>
                             <strong class="d-block text-dark small">@u.FullName</strong>
-                            <small class="text-muted">@u.Login | @u.Email</small>
+                            <small class="text-secondary">@u.Login | @u.Email</small>
                         </div>
-                        <span class="badge bg-secondary-subtle text-dark">@(u.Role?.Name ?? "Клиент")</span>
+                        <span class="badge @roleBadge small">@(u.Role?.Name ?? "Клиент")</span>
                     </li>
                 }
             </ul>
