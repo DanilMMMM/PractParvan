@@ -1,0 +1,135 @@
+@model IEnumerable<VetClinic.Models.Pet>
+@{
+    bool isClient = ViewBag.IsClient ?? false;
+    ViewData["Title"] = isClient ? "Мои питомцы" : "База пациентов (питомцы)";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">
+            <i class="bi bi-heart-pulse text-danger me-2"></i>
+            @(isClient ? "Мои любимые питомцы" : "Реестр животных (пациенты клиники)")
+        </h2>
+        <p class="text-secondary small mb-0">
+            @(isClient ? "Управляйте данными своих животных, просматривайте медицинскую историю и назначения врачей." 
+                       : "Полная база пациентов клиники, электронные медкнижки и история приёмов.")
+        </p>
+    </div>
+    <div>
+        <a asp-action="Create" class="btn btn-teal">
+            <i class="bi bi-plus-lg me-1"></i> Добавить питомца
+        </a>
+    </div>
+</div>
+
+<!-- Search & Filter Card -->
+<div class="card card-custom p-3 bg-white mb-4 border">
+    <form method="get" asp-action="Index" class="row g-2 align-items-center">
+        <div class="col-md-5">
+            <div class="input-group">
+                <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                <input type="text" name="search" class="form-control" placeholder="Поиск по кличке, породе или владельцу..." 
+                       value="@ViewBag.Search" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <select name="typeId" class="form-select" asp-items="ViewBag.PetTypes">
+                <option value="">-- Все виды животных --</option>
+            </select>
+        </div>
+        <div class="col-md-3 d-flex gap-2">
+            <button type="submit" class="btn btn-teal flex-grow-1">
+                <i class="bi bi-funnel me-1"></i> Фильтр
+            </button>
+            <a asp-action="Index" class="btn btn-outline-secondary" title="Сбросить">
+                <i class="bi bi-x-circle"></i>
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- Pets List -->
+@if (!Model.Any())
+{
+    <div class="card card-custom p-5 bg-white text-center border">
+        <i class="bi bi-emoji-neutral fs-1 text-muted mb-2"></i>
+        <h4 class="text-secondary">Питомцы не найдены</h4>
+        <p class="text-muted small">Добавьте питомца или измените параметры поиска</p>
+        <div class="mt-2">
+            <a asp-action="Create" class="btn btn-teal btn-sm">
+                <i class="bi bi-plus-circle me-1"></i> Добавить первого питомца
+            </a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row g-3">
+        @foreach (var pet in Model)
+        {
+            var iconClass = pet.PetType?.Name switch
+            {
+                "Собака" => "bi-github",
+                "Кошка" => "bi-balloon-heart",
+                "Птица" => "bi-feather",
+                "Грызун" => "bi-bug",
+                _ => "bi-heart"
+            };
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card card-custom h-100 bg-white p-3 border d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="rounded-circle bg-light text-teal d-flex align-items-center justify-content-center p-2 fs-4" style="color: #0d9488;">
+                                    <i class="bi @iconClass"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold text-dark mb-0">@pet.Name</h5>
+                                    <span class="badge bg-light text-dark border">@pet.PetType?.Name</span>
+                                    <span class="badge bg-secondary-subtle text-secondary">@pet.Gender</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <ul class="list-unstyled small text-secondary mt-3 mb-3">
+                            <li class="mb-1"><i class="bi bi-tag me-2 text-muted"></i><strong>Порода:</strong> @(pet.Breed ?? "Метис / беспородный")</li>
+                            <li class="mb-1"><i class="bi bi-hourglass-split me-2 text-muted"></i><strong>Возраст:</strong> @pet.AgeDisplay</li>
+                            <li class="mb-1"><i class="bi bi-speedometer2 me-2 text-muted"></i><strong>Вес:</strong> @(pet.Weight.HasValue ? $"{pet.Weight.Value} кг" : "Не указан")</li>
+                            
+                            @if (!isClient)
+                            {
+                                <li class="mb-1"><i class="bi bi-person me-2 text-muted"></i><strong>Владелец:</strong> @(pet.Owner?.FullName ?? "—") (@pet.Owner?.Phone)</li>
+                            }
+
+                            @if (!string.IsNullOrWhiteSpace(pet.MedicalNotes))
+                            {
+                                <li class="mt-2 p-2 bg-light rounded text-dark border">
+                                    <i class="bi bi-info-circle text-primary me-1"></i>
+                                    <strong>Особенности:</strong> @(pet.MedicalNotes.Length > 60 ? pet.MedicalNotes.Substring(0, 57) + "..." : pet.MedicalNotes)
+                                </li>
+                            }
+                        </ul>
+                    </div>
+
+                    <div class="pt-3 border-top d-flex flex-wrap gap-2 justify-content-between align-items-center">
+                        <a asp-action="Details" asp-route-id="@pet.Id" class="btn btn-sm btn-outline-teal">
+                            <i class="bi bi-file-earmark-medical me-1"></i> Медкарта (@pet.Visits.Count)
+                        </a>
+                        <div class="d-flex gap-1">
+                            <a asp-controller="Visits" asp-action="Create" asp-route-petId="@pet.Id" class="btn btn-sm btn-light border" title="Записать на приём">
+                                <i class="bi bi-calendar-plus text-primary"></i>
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@pet.Id" class="btn btn-sm btn-light border" title="Редактировать">
+                                <i class="bi bi-pencil text-warning"></i>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@pet.Id" class="btn btn-sm btn-light border" title="Удалить">
+                                <i class="bi bi-trash text-danger"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

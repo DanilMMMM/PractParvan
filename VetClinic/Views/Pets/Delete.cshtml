@@ -1,0 +1,45 @@
+@model VetClinic.Models.Pet
+@{
+    ViewData["Title"] = $"Удаление: {Model.Name}";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card card-custom p-4 bg-white border border-danger">
+            <div class="text-center mb-3">
+                <i class="bi bi-exclamation-triangle-fill text-danger fs-1"></i>
+                <h3 class="fw-bold text-dark mt-2">Удаление питомца</h3>
+                <p class="text-danger small fw-semibold">Вы уверены, что хотите удалить карту животного «@Model.Name»?</p>
+            </div>
+
+            <div class="bg-light p-3 rounded mb-4 border">
+                <dl class="row mb-0 small">
+                    <dt class="col-4 text-muted">Кличка:</dt>
+                    <dd class="col-8 fw-semibold">@Model.Name</dd>
+
+                    <dt class="col-4 text-muted">Вид / Порода:</dt>
+                    <dd class="col-8">@Model.PetType?.Name, @(Model.Breed ?? "Метис")</dd>
+
+                    <dt class="col-4 text-muted">Владелец:</dt>
+                    <dd class="col-8">@(Model.Owner?.FullName ?? "—")</dd>
+
+                    <dt class="col-4 text-muted">Приёмов в клинике:</dt>
+                    <dd class="col-8 fw-semibold text-danger">@Model.Visits.Count записей будут также удалены</dd>
+                </dl>
+            </div>
+
+            <form asp-action="Delete" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Отмена
+                    </a>
+                    <button type="submit" class="btn btn-danger px-4">
+                        <i class="bi bi-trash me-1"></i> Да, удалить навсегда
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

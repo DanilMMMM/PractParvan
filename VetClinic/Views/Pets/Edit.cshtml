@@ -1,0 +1,112 @@
+@model VetClinic.Models.Pet
+@{
+    ViewData["Title"] = $"Редактирование: {Model.Name}";
+    bool isAdmin = User.IsInRole("Администратор");
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card card-custom p-4 bg-white border">
+            <div class="d-flex align-items-center gap-3 border-bottom pb-3 mb-4">
+                <div class="rounded-circle bg-teal text-white d-flex align-items-center justify-content-center fs-2" 
+                     style="width: 60px; height: 60px; background-color: #0d9488;">
+                    <i class="bi bi-pencil-square"></i>
+                </div>
+                <div>
+                    <h3 class="fw-bold mb-0 text-dark">Редактирование карты: @Model.Name</h3>
+                    <p class="text-muted small mb-0">Обновление регистрационных и медицинских сведений</p>
+                </div>
+            </div>
+
+            <form asp-action="Edit" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="CreatedAt" />
+                @if (!isAdmin)
+                {
+                    <input type="hidden" asp-for="OwnerId" />
+                }
+
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small mb-3"></div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Name" class="form-label fw-semibold"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="PetTypeId" class="form-label fw-semibold"></label>
+                        <select asp-for="PetTypeId" class="form-select" asp-items="ViewBag.PetTypeId"></select>
+                        <span asp-validation-for="PetTypeId" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Breed" class="form-label fw-semibold"></label>
+                        <input asp-for="Breed" class="form-control" />
+                        <span asp-validation-for="Breed" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Gender" class="form-label fw-semibold"></label>
+                        <select asp-for="Gender" class="form-select">
+                            <option value="Самец">Самец</option>
+                            <option value="Самка">Самка</option>
+                            <option value="Не указан">Не указан</option>
+                        </select>
+                        <span asp-validation-for="Gender" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="BirthDate" class="form-label fw-semibold"></label>
+                        <input asp-for="BirthDate" class="form-control" type="date" 
+                               value="@(Model.BirthDate.HasValue ? Model.BirthDate.Value.ToString("yyyy-MM-dd") : "")" />
+                        <span asp-validation-for="BirthDate" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Weight" class="form-label fw-semibold"></label>
+                        <div class="input-group">
+                            <input asp-for="Weight" class="form-control" type="number" step="0.1" min="0" />
+                            <span class="input-group-text">кг</span>
+                        </div>
+                        <span asp-validation-for="Weight" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                @if (isAdmin && ViewBag.OwnerId != null)
+                {
+                    <div class="mb-3">
+                        <label asp-for="OwnerId" class="form-label fw-semibold"></label>
+                        <select asp-for="OwnerId" class="form-select" asp-items="ViewBag.OwnerId"></select>
+                        <span asp-validation-for="OwnerId" class="text-danger small"></span>
+                    </div>
+                }
+
+                <div class="mb-4">
+                    <label asp-for="MedicalNotes" class="form-label fw-semibold"></label>
+                    <textarea asp-for="MedicalNotes" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="MedicalNotes" class="text-danger small"></span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Отмена
+                    </a>
+                    <button type="submit" class="btn btn-teal px-4">
+                        <i class="bi bi-check-lg me-1"></i> Сохранить изменения
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

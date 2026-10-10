@@ -1,0 +1,282 @@
+@using System.Security.Claims
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] — ВетЗабота | Ветеринарная клиника</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        :root {
+            --primary-teal: #0d9488;
+            --primary-teal-dark: #0f766e;
+            --secondary-dark: #1e293b;
+            --bg-light: #f8fafc;
+        }
+        body {
+            background-color: var(--bg-light);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        main {
+            flex: 1;
+        }
+        .navbar-custom {
+            background: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-teal) !important;
+            font-size: 1.35rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .nav-link {
+            font-weight: 500;
+            color: #475569 !important;
+            transition: color 0.2s ease;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-teal) !important;
+        }
+        .btn-teal {
+            background-color: var(--primary-teal);
+            color: #ffffff;
+            border: none;
+            transition: background-color 0.2s;
+        }
+        .btn-teal:hover {
+            background-color: var(--primary-teal-dark);
+            color: #ffffff;
+        }
+        .btn-outline-teal {
+            border: 1px solid var(--primary-teal);
+            color: var(--primary-teal);
+        }
+        .btn-outline-teal:hover {
+            background-color: var(--primary-teal);
+            color: #ffffff;
+        }
+        .card-custom {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .badge-role-admin {
+            background-color: #dc2626;
+            color: white;
+        }
+        .badge-role-vet {
+            background-color: #0284c7;
+            color: white;
+        }
+        .badge-role-client {
+            background-color: #16a34a;
+            color: white;
+        }
+        .footer-custom {
+            background-color: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 3rem;
+            padding: 1.5rem 0;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light navbar-custom sticky-top py-2">
+            <div class="container">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-heart-pulse-fill text-danger fs-3"></i>
+                    <span>ВетЗабота</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" 
+                        aria-controls="mainNavbar" aria-expanded="false" aria-label="Навигация">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house me-1"></i> Главная
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Services">
+                                <i class="bi bi-card-checklist me-1"></i> Услуги и цены
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Contacts">
+                                <i class="bi bi-geo-alt me-1"></i> Контакты
+                            </a>
+                        </li>
+
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Pets" asp-action="Index">
+                                    <i class="bi bi-github me-1"></i>
+                                    @(User.IsInRole("Клиент") ? "Мои питомцы" : "Питомцы (пациенты)")
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Visits" asp-action="Index">
+                                    <i class="bi bi-calendar-check me-1"></i>
+                                    @(User.IsInRole("Клиент") ? "Мои приёмы" : "Журнал приёмов")
+                                </a>
+                            </li>
+
+                            @if (User.IsInRole("Администратор"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-danger fw-bold" href="#" id="adminMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-shield-lock-fill me-1"></i> Администратор
+                                    </a>
+                                    <ul class="dropdown-menu shadow-sm" aria-labelledby="adminMenu">
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Admin" asp-action="Index">
+                                                <i class="bi bi-speedometer2 me-2"></i> Панель управления
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Admin" asp-action="Users">
+                                                <i class="bi bi-people me-2"></i> Пользователи и роли
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Admin" asp-action="Services">
+                                                <i class="bi bi-tags me-2"></i> Прейскурант услуг
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Visits" asp-action="Index">
+                                                <i class="bi bi-journal-medical me-2"></i> Все приёмы клиники
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+                        }
+                    </ul>
+
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            var role = User.FindFirstValue(ClaimTypes.Role) ?? "Клиент";
+                            var badgeClass = role switch
+                            {
+                                "Администратор" => "badge-role-admin",
+                                "Ветеринар" => "badge-role-vet",
+                                _ => "badge-role-client"
+                            };
+
+                            <li class="nav-item me-2 d-none d-md-block">
+                                <a asp-controller="Visits" asp-action="Create" class="btn btn-sm btn-teal rounded-pill px-3">
+                                    <i class="bi bi-plus-circle me-1"></i> Записаться на приём
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="userMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="badge @badgeClass rounded-pill">@role</span>
+                                    <span class="fw-semibold">@(User.FindFirst("FullName")?.Value ?? User.Identity.Name)</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="userMenu">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Account" asp-action="Profile">
+                                            <i class="bi bi-person me-2"></i> Личный кабинет
+                                        </a>
+                                    </li>
+                                    @if (User.IsInRole("Клиент"))
+                                    {
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Pets" asp-action="Index">
+                                                <i class="bi bi-hearts me-2"></i> Мои животные
+                                            </a>
+                                        </li>
+                                    }
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="dropdown-item text-danger">
+                                                <i class="bi bi-box-arrow-right me-2"></i> Выйти из системы
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item me-2">
+                                <a class="btn btn-outline-teal btn-sm px-3" asp-controller="Account" asp-action="Login">
+                                    <i class="bi bi-box-arrow-in-right me-1"></i> Войти
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-teal btn-sm px-3" asp-controller="Account" asp-action="Register">
+                                    <i class="bi bi-person-plus me-1"></i> Регистрация
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container mt-4">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show shadow-sm d-flex align-items-center" role="alert">
+                <i class="bi bi-check-circle-fill fs-5 me-2"></i>
+                <div>@TempData["SuccessMessage"]</div>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show shadow-sm d-flex align-items-center" role="alert">
+                <i class="bi bi-exclamation-triangle-fill fs-5 me-2"></i>
+                <div>@TempData["ErrorMessage"]</div>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer-custom">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+                    <span class="fw-bold text-dark"><i class="bi bi-heart-pulse text-danger me-1"></i> Ветеринарная клиника «ВетЗабота»</span><br>
+                    <small>Индивидуальная практическая работа. Вариант 16. Студент: <strong>Макаренко Данил</strong></small>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <small class="d-block"><i class="bi bi-telephone me-1"></i> Единый телефон: +7 (900) 555-35-35 (Круглосуточно)</small>
+                    <small class="d-block"><i class="bi bi-clock me-1"></i> Часы работы: ежедневно с 08:00 до 22:00 (скорая помощь 24/7)</small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

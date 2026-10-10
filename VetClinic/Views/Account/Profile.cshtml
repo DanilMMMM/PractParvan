@@ -1,0 +1,90 @@
+@model VetClinic.ViewModels.ProfileViewModel
+@{
+    ViewData["Title"] = "Личный кабинет";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card card-custom p-4 bg-white border mb-4">
+            <div class="d-flex align-items-center gap-3 border-bottom pb-3 mb-4">
+                <div class="rounded-circle bg-teal text-white d-flex align-items-center justify-content-center fs-2" 
+                     style="width: 70px; height: 70px; background-color: #0d9488;">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+                <div>
+                    <h3 class="fw-bold mb-0 text-dark">@Model.FullName</h3>
+                    <div class="d-flex align-items-center gap-2 mt-1">
+                        <span class="badge bg-primary">Роль: @Model.RoleName</span>
+                        @if (!string.IsNullOrEmpty(Model.Specialization))
+                        {
+                            <span class="badge bg-info text-dark">@Model.Specialization</span>
+                        }
+                        <span class="text-muted small">В системе с @Model.CreatedAt.ToString("dd.MM.yyyy")</span>
+                    </div>
+                </div>
+            </div>
+
+            <form asp-action="Profile" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="Login" />
+
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small mb-3"></div>
+
+                <h5 class="fw-bold text-dark mb-3"><i class="bi bi-pencil-square me-2"></i> Персональные данные</h5>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label asp-for="Login" class="form-label text-muted small fw-semibold"></label>
+                        <input asp-for="Login" class="form-control bg-light" disabled />
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="FullName" class="form-label text-muted small fw-semibold"></label>
+                        <input asp-for="FullName" class="form-control" />
+                        <span asp-validation-for="FullName" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Email" class="form-label text-muted small fw-semibold"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Phone" class="form-label text-muted small fw-semibold"></label>
+                        <input asp-for="Phone" class="form-control" />
+                        <span asp-validation-for="Phone" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <h5 class="fw-bold text-dark mb-3"><i class="bi bi-shield-lock me-2"></i> Смена пароля (при необходимости)</h5>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label asp-for="CurrentPassword" class="form-label text-muted small fw-semibold"></label>
+                        <input asp-for="CurrentPassword" class="form-control" placeholder="Текущий пароль" />
+                        <span asp-validation-for="CurrentPassword" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="NewPassword" class="form-label text-muted small fw-semibold"></label>
+                        <input asp-for="NewPassword" class="form-control" placeholder="Новый пароль" />
+                        <span asp-validation-for="NewPassword" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="ConfirmNewPassword" class="form-label text-muted small fw-semibold"></label>
+                        <input asp-for="ConfirmNewPassword" class="form-control" placeholder="Повторите пароль" />
+                        <span asp-validation-for="ConfirmNewPassword" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-teal px-4">
+                        <i class="bi bi-check2-circle me-1"></i> Сохранить изменения
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

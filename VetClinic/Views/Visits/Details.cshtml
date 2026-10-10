@@ -1,0 +1,151 @@
+@model VetClinic.Models.Visit
+@{
+    ViewData["Title"] = $"Протокол приёма №{Model.Id}";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2 d-print-none">
+    <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-1 small">
+                <li class="breadcrumb-item"><a asp-action="Index">Приёмы</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Протокол №@Model.Id</li>
+            </ol>
+        </nav>
+        <h2 class="fw-bold text-dark mb-0">
+            <i class="bi bi-file-earmark-medical-fill text-teal me-2" style="color: #0d9488;"></i>
+            Протокол ветеринарного осмотра №@Model.Id
+        </h2>
+    </div>
+    <div class="d-flex gap-2">
+        <button onclick="window.print()" class="btn btn-outline-secondary">
+            <i class="bi bi-printer me-1"></i> Распечатать протокол
+        </button>
+        @if ((User.IsInRole("Ветеринар") || User.IsInRole("Администратор")) && Model.Status != "Завершён")
+        {
+            <a asp-action="Conduct" asp-route-id="@Model.Id" class="btn btn-teal">
+                <i class="bi bi-clipboard2-pulse me-1"></i> Заполнить протокол
+            </a>
+        }
+        <a asp-action="Index" class="btn btn-light border">
+            <i class="bi bi-arrow-left me-1"></i> К журналу
+        </a>
+    </div>
+</div>
+
+<!-- Protocol Document Card -->
+<div class="card card-custom p-4 p-md-5 bg-white border">
+    <div class="row border-bottom pb-4 mb-4 align-items-center">
+        <div class="col-sm-7">
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <i class="bi bi-heart-pulse-fill text-danger fs-3"></i>
+                <h4 class="fw-bold mb-0 text-dark">Ветеринарная клиника «ВетЗабота»</h4>
+            </div>
+            <p class="text-muted small mb-0">г. Москва, ул. Ветеринарная, д. 16 | Телефон: +7 (900) 555-35-35</p>
+        </div>
+        <div class="col-sm-5 text-sm-end mt-3 mt-sm-0">
+            <span class="badge @Model.StatusBadgeClass fs-6 px-3 py-2 mb-1">@Model.Status</span>
+            <div class="small text-muted">Дата осмотра: <strong>@Model.VisitDate.ToString("dd.MM.yyyy HH:mm")</strong></div>
+        </div>
+    </div>
+
+    <!-- Patient and Doctor Info -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-6">
+            <div class="p-3 bg-light rounded-3 border h-100">
+                <h6 class="fw-bold text-dark text-uppercase small border-bottom pb-2 mb-2">
+                    <i class="bi bi-github text-teal me-1" style="color: #0d9488;"></i> Пациент и владелец
+                </h6>
+                <dl class="row mb-0 small">
+                    <dt class="col-4 text-muted">Кличка:</dt>
+                    <dd class="col-8 fw-bold">@Model.Pet?.Name</dd>
+
+                    <dt class="col-4 text-muted">Вид / Порода:</dt>
+                    <dd class="col-8">@Model.Pet?.PetType?.Name, @(Model.Pet?.Breed ?? "Метис")</dd>
+
+                    <dt class="col-4 text-muted">Возраст / Пол:</dt>
+                    <dd class="col-8">@Model.Pet?.AgeDisplay, @Model.Pet?.Gender</dd>
+
+                    <dt class="col-4 text-muted">Владелец:</dt>
+                    <dd class="col-8 fw-semibold">@Model.Client?.FullName</dd>
+
+                    <dt class="col-4 text-muted">Телефон:</dt>
+                    <dd class="col-8">@(Model.Client?.Phone ?? "—")</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="p-3 bg-light rounded-3 border h-100">
+                <h6 class="fw-bold text-dark text-uppercase small border-bottom pb-2 mb-2">
+                    <i class="bi bi-person-badge text-primary me-1"></i> Лечащий врач и процедура
+                </h6>
+                <dl class="row mb-0 small">
+                    <dt class="col-4 text-muted">Ветеринар:</dt>
+                    <dd class="col-8 fw-bold">@Model.Veterinarian?.FullName</dd>
+
+                    <dt class="col-4 text-muted">Специализация:</dt>
+                    <dd class="col-8">@(Model.Veterinarian?.Specialization ?? "Ветеринарный врач")</dd>
+
+                    <dt class="col-4 text-muted">Услуга:</dt>
+                    <dd class="col-8 fw-semibold">@Model.Service?.Name</dd>
+
+                    <dt class="col-4 text-muted">Длительность:</dt>
+                    <dd class="col-8">@Model.Service?.DurationMinutes мин</dd>
+
+                    <dt class="col-4 text-muted">Оформлено:</dt>
+                    <dd class="col-8">@Model.CreatedAt.ToString("dd.MM.yyyy")</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clinical Details -->
+    <div class="mb-4">
+        <h6 class="fw-bold text-dark text-uppercase small mb-3">Результаты клинического осмотра</h6>
+
+        <div class="mb-3">
+            <strong class="d-block text-secondary small mb-1">Жалобы при обращении (анамнез):</strong>
+            <div class="p-3 bg-light rounded border text-dark">
+                @(string.IsNullOrWhiteSpace(Model.Symptoms) ? "Особых первичных жалоб не зафиксировано." : Model.Symptoms)
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <strong class="d-block text-danger small mb-1">Установленный диагноз:</strong>
+            <div class="p-3 bg-danger-subtle rounded border border-danger-subtle text-dark fw-semibold">
+                @(string.IsNullOrWhiteSpace(Model.Diagnosis) ? "Диагноз пока не внесён лечащим врачом." : Model.Diagnosis)
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <strong class="d-block text-primary small mb-1">Назначения, схема лечения и рекомендации:</strong>
+            <div class="p-3 bg-primary-subtle rounded border border-primary-subtle text-dark" style="white-space: pre-line;">
+                @(string.IsNullOrWhiteSpace(Model.Treatment) ? "Назначения будут внесены после проведения приёма." : Model.Treatment)
+            </div>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(Model.DoctorNotes))
+        {
+            <div class="mb-3">
+                <strong class="d-block text-secondary small mb-1">Особые примечания врача:</strong>
+                <div class="p-3 bg-light rounded border small text-secondary">
+                    @Model.DoctorNotes
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Cost and Signature -->
+    <div class="pt-3 border-top">
+        <div class="row align-items-center">
+            <div class="col-sm-6 mb-3 mb-sm-0">
+                <div class="small text-muted">Итоговая стоимость оказанных услуг:</div>
+                <div class="fs-3 fw-bold text-dark">@Model.TotalCost.ToString("N0") ₽</div>
+            </div>
+            <div class="col-sm-6 text-sm-end">
+                <div class="small text-muted mb-4">Врач-ветеринар: __________________ / @Model.Veterinarian?.FullName /</div>
+                <div class="small text-muted">М.П. Ветеринарная клиника «ВетЗабота»</div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+@{
+    ViewData["Title"] = "Доступ ограничен (403)";
+}
+
+<div class="row justify-content-center my-5">
+    <div class="col-md-7 text-center">
+        <div class="card card-custom p-5 bg-white border">
+            <div class="display-1 text-danger mb-3">
+                <i class="bi bi-shield-x"></i>
+            </div>
+            <h2 class="fw-bold text-dark mb-2">Доступ ограничен</h2>
+            <p class="text-secondary lead mb-4">
+                У вашей учётной записи недостаточно прав для просмотра данного раздела системы.
+                Раздел предназначен только для уполномоченных ролей (Администратор или Ветеринар).
+            </p>
+            <div class="d-flex justify-content-center gap-2">
+                <a asp-controller="Home" asp-action="Index" class="btn btn-teal">
+                    <i class="bi bi-house me-1"></i> На главную страницу
+                </a>
+                <a asp-controller="Account" asp-action="Profile" class="btn btn-outline-secondary">
+                    <i class="bi bi-person me-1"></i> В личный кабинет
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

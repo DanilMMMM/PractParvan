@@ -1,0 +1,126 @@
+@model VetClinic.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Регистрация нового пользователя";
+}
+
+<div class="row justify-content-center mt-3 mb-5">
+    <div class="col-md-8 col-lg-6">
+        <div class="card card-custom p-4 bg-white border">
+            <div class="text-center mb-4">
+                <div class="display-6 text-teal mb-2" style="color: #0d9488;">
+                    <i class="bi bi-person-plus-fill"></i>
+                </div>
+                <h3 class="fw-bold text-dark">Регистрация в системе</h3>
+                <p class="text-muted small">Заполните анкету для создания учётной записи</p>
+            </div>
+
+            <form asp-action="Register" method="post">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="FullName" class="form-label fw-semibold"></label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-person-vcard"></i></span>
+                        <input asp-for="FullName" class="form-control" placeholder="Иванов Иван Иванович" />
+                    </div>
+                    <span asp-validation-for="FullName" class="text-danger small"></span>
+                </div>
+
+                <div class="row g-2 mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Login" class="form-label fw-semibold"></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                            <input asp-for="Login" class="form-control" placeholder="ivanov99" />
+                        </div>
+                        <span asp-validation-for="Login" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Email" class="form-label fw-semibold"></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                            <input asp-for="Email" class="form-control" placeholder="ivanov@mail.ru" />
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row g-2 mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Phone" class="form-label fw-semibold"></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                            <input asp-for="Phone" class="form-control" placeholder="+7 (900) 123-45-67" />
+                        </div>
+                        <span asp-validation-for="Phone" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="RoleId" class="form-label fw-semibold"></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person-gear"></i></span>
+                            <select asp-for="RoleId" class="form-select" asp-items="ViewBag.Roles" id="roleSelect"></select>
+                        </div>
+                        <span asp-validation-for="RoleId" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3" id="specGroup" style="display: none;">
+                    <label asp-for="Specialization" class="form-label fw-semibold"></label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
+                        <input asp-for="Specialization" class="form-control" placeholder="Например: Хирург, Терапевт, Офтальмолог" />
+                    </div>
+                    <span asp-validation-for="Specialization" class="text-danger small"></span>
+                </div>
+
+                <div class="row g-2 mb-4">
+                    <div class="col-md-6">
+                        <label asp-for="Password" class="form-label fw-semibold"></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-key"></i></span>
+                            <input asp-for="Password" class="form-control" placeholder="Минимум 4 символа" />
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="ConfirmPassword" class="form-label fw-semibold"></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-check2-circle"></i></span>
+                            <input asp-for="ConfirmPassword" class="form-control" placeholder="Повторите пароль" />
+                        </div>
+                        <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="d-grid mb-3">
+                    <button type="submit" class="btn btn-teal btn-lg">
+                        <i class="bi bi-person-check me-1"></i> Зарегистрироваться
+                    </button>
+                </div>
+
+                <div class="text-center small text-muted">
+                    Уже есть учётная запись? <a asp-action="Login" class="text-decoration-none fw-semibold">Войти в систему</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const roleSelect = document.getElementById('roleSelect');
+        const specGroup = document.getElementById('specGroup');
+        function checkRole() {
+            const selectedText = roleSelect.options[roleSelect.selectedIndex]?.text;
+            if (selectedText === 'Ветеринар') {
+                specGroup.style.display = 'block';
+            } else {
+                specGroup.style.display = 'none';
+            }
+        }
+        roleSelect.addEventListener('change', checkRole);
+        checkRole();
+    </script>
+}

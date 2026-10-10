@@ -1,0 +1,150 @@
+@model VetClinic.ViewModels.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Панель администратора";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">
+            <i class="bi bi-speedometer2 text-danger me-2"></i> Панель администратора
+        </h2>
+        <p class="text-secondary small mb-0">Сводные показатели клиники, оперативное управление персоналом, клиентами и услугами.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="Users" class="btn btn-outline-primary">
+            <i class="bi bi-people me-1"></i> Пользователи
+        </a>
+        <a asp-action="Services" class="btn btn-outline-success">
+            <i class="bi bi-tags me-1"></i> Услуги и цены
+        </a>
+    </div>
+</div>
+
+<!-- Stats Metric Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-lg-3">
+        <div class="card card-custom p-3 bg-white border">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-muted small fw-semibold">Пользователей</span>
+                    <h3 class="fw-bold text-dark mb-0">@Model.TotalUsers</h3>
+                    <small class="text-secondary">Клиентов: @Model.TotalClients | Врачей: @Model.TotalVets</small>
+                </div>
+                <div class="p-3 bg-primary-subtle text-primary rounded-circle fs-3">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+        <div class="card card-custom p-3 bg-white border">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-muted small fw-semibold">Пациентов (животных)</span>
+                    <h3 class="fw-bold text-teal mb-0" style="color: #0d9488;">@Model.TotalPets</h3>
+                    <small class="text-secondary">Зарегистрировано в базе</small>
+                </div>
+                <div class="p-3 bg-teal-subtle text-teal rounded-circle fs-3" style="background-color: #ccfbf1; color: #0f766e;">
+                    <i class="bi bi-heart-pulse-fill"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+        <div class="card card-custom p-3 bg-white border">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-muted small fw-semibold">Всего приёмов</span>
+                    <h3 class="fw-bold text-dark mb-0">@Model.TotalVisits</h3>
+                    <small class="text-secondary">Запланировано: @Model.PlannedVisits | Завершено: @Model.CompletedVisits</small>
+                </div>
+                <div class="p-3 bg-warning-subtle text-warning-emphasis rounded-circle fs-3">
+                    <i class="bi bi-calendar-check-fill"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+        <div class="card card-custom p-3 bg-white border">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-muted small fw-semibold">Выручка клиники</span>
+                    <h3 class="fw-bold text-success mb-0">@Model.TotalRevenue.ToString("N0") ₽</h3>
+                    <small class="text-secondary">По завершённым визитам</small>
+                </div>
+                <div class="p-3 bg-success-subtle text-success rounded-circle fs-3">
+                    <i class="bi bi-cash-coin"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activities -->
+<div class="row g-4">
+    <!-- Recent Visits -->
+    <div class="col-lg-8">
+        <div class="card card-custom bg-white border p-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-clock-history me-1 text-primary"></i> Последние приёмы</h5>
+                <a asp-controller="Visits" asp-action="Index" class="btn btn-sm btn-link text-decoration-none">Все приёмы &rarr;</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover table-sm align-middle mb-0">
+                    <thead class="table-light small">
+                        <tr>
+                            <th>Дата</th>
+                            <th>Питомец</th>
+                            <th>Клиент</th>
+                            <th>Врач</th>
+                            <th>Статус</th>
+                            <th class="text-end">Сумма</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var v in Model.RecentVisits)
+                        {
+                            <tr>
+                                <td>@v.VisitDate.ToString("dd.MM.yy HH:mm")</td>
+                                <td>
+                                    <a asp-controller="Pets" asp-action="Details" asp-route-id="@v.PetId" class="text-decoration-none fw-semibold">
+                                        @v.Pet?.Name
+                                    </a>
+                                </td>
+                                <td>@v.Client?.FullName</td>
+                                <td>@v.Veterinarian?.FullName</td>
+                                <td><span class="badge @v.StatusBadgeClass">@v.Status</span></td>
+                                <td class="text-end fw-bold">@v.TotalCost.ToString("N0") ₽</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Users -->
+    <div class="col-lg-4">
+        <div class="card card-custom bg-white border p-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-person-check me-1 text-success"></i> Новые пользователи</h5>
+                <a asp-action="Users" class="btn btn-sm btn-link text-decoration-none">Управление &rarr;</a>
+            </div>
+            <ul class="list-group list-group-flush">
+                @foreach (var u in Model.RecentUsers)
+                {
+                    <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong class="d-block text-dark small">@u.FullName</strong>
+                            <small class="text-muted">@u.Login | @u.Email</small>
+                        </div>
+                        <span class="badge bg-secondary-subtle text-dark">@(u.Role?.Name ?? "Клиент")</span>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,190 @@
+@model IEnumerable<VetClinic.Models.Visit>
+@{
+    bool isClient = User.IsInRole("Клиент");
+    bool isVet = User.IsInRole("Ветеринар");
+    bool isAdmin = User.IsInRole("Администратор");
+    ViewData["Title"] = isClient ? "Мои записи на приём" : "Журнал приёмов клиники";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">
+            <i class="bi bi-calendar-check text-teal me-2" style="color: #0d9488;"></i>
+            @(isClient ? "Мои записи и приёмы" : (isVet ? "Моё расписание и приёмы" : "Журнал всех приёмов клиники"))
+        </h2>
+        <p class="text-secondary small mb-0">
+            Фильтрация по датам, статусам процедур, поиск по пациентам и диагнозам.
+        </p>
+    </div>
+    <div>
+        <a asp-action="Create" class="btn btn-teal">
+            <i class="bi bi-calendar-plus me-1"></i> Записаться на приём
+        </a>
+    </div>
+</div>
+
+<!-- Search & Filters -->
+<div class="card card-custom p-3 bg-white mb-4 border">
+    <form method="get" asp-action="Index" class="row g-2 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label text-muted small fw-semibold">Поиск</label>
+            <div class="input-group input-group-sm">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" name="search" class="form-control" placeholder="Кличка, диагноз, клиент..." value="@ViewBag.Search" />
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label text-muted small fw-semibold">Статус</label>
+            <select name="status" class="form-select form-select-sm">
+                <option value="">Все статусы</option>
+                <option value="Запланирован" selected="@(ViewBag.Status == "Запланирован")">Запланирован</option>
+                <option value="В процессе" selected="@(ViewBag.Status == "В процессе")">В процессе</option>
+                <option value="Завершён" selected="@(ViewBag.Status == "Завершён")">Завершён</option>
+                <option value="Отменён" selected="@(ViewBag.Status == "Отменён")">Отменён</option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label text-muted small fw-semibold">Дата с</label>
+            <input type="date" name="dateFrom" class="form-control form-control-sm" value="@ViewBag.DateFrom" />
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label text-muted small fw-semibold">Дата по</label>
+            <input type="date" name="dateTo" class="form-control form-control-sm" value="@ViewBag.DateTo" />
+        </div>
+
+        @if (isAdmin)
+        {
+            <div class="col-md-2">
+                <label class="form-label text-muted small fw-semibold">Ветеринар</label>
+                <select name="vetId" class="form-select form-select-sm" asp-items="ViewBag.Vets">
+                    <option value="">Все врачи</option>
+                </select>
+            </div>
+        }
+
+        <div class="col-md-1 d-flex gap-1">
+            <button type="submit" class="btn btn-sm btn-teal flex-grow-1" title="Применить">
+                <i class="bi bi-funnel"></i>
+            </button>
+            <a asp-action="Index" class="btn btn-sm btn-outline-secondary" title="Сбросить">
+                <i class="bi bi-x-lg"></i>
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- Visits Table -->
+<div class="card card-custom bg-white border overflow-hidden">
+    @if (!Model.Any())
+    {
+        <div class="p-5 text-center text-muted">
+            <i class="bi bi-calendar-x fs-1 mb-2"></i>
+            <h5>Приёмы не найдены</h5>
+            <p class="small mb-0">Попробуйте изменить параметры поиска или создайте новую запись</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light small text-uppercase text-secondary">
+                    <tr>
+                        <th>Дата и время</th>
+                        <th>Статус</th>
+                        <th>Питомец (пациент)</th>
+                        @if (!isClient)
+                        {
+                            <th>Владелец</th>
+                        }
+                        @if (isClient || isAdmin)
+                        {
+                            <th>Врач-ветеринар</th>
+                        }
+                        <th>Услуга</th>
+                        <th>Стоимость</th>
+                        <th class="text-end">Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var v in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong class="d-block text-dark">@v.VisitDate.ToString("dd.MM.yyyy")</strong>
+                                <span class="badge bg-light text-dark border">
+                                    <i class="bi bi-clock me-1"></i>@v.VisitDate.ToString("HH:mm")
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge @v.StatusBadgeClass">@v.Status</span>
+                            </td>
+                            <td>
+                                <a asp-controller="Pets" asp-action="Details" asp-route-id="@v.PetId" class="fw-bold text-teal text-decoration-none" style="color: #0d9488;">
+                                    @v.Pet?.Name
+                                </a>
+                                <small class="d-block text-muted">@(v.Pet?.Breed ?? "Питомец")</small>
+                            </td>
+                            @if (!isClient)
+                            {
+                                <td>
+                                    <span class="d-block fw-semibold text-dark">@v.Client?.FullName</span>
+                                    <small class="text-muted">@v.Client?.Phone</small>
+                                </td>
+                            }
+                            @if (isClient || isAdmin)
+                            {
+                                <td>
+                                    <span class="d-block fw-semibold text-dark">@v.Veterinarian?.FullName</span>
+                                    <small class="text-muted">@(v.Veterinarian?.Specialization ?? "Ветеринар")</small>
+                                </td>
+                            }
+                            <td>
+                                <span class="d-block text-dark small">@v.Service?.Name</span>
+                            </td>
+                            <td>
+                                <strong class="text-dark">@v.TotalCost.ToString("N0") ₽</strong>
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group btn-group-sm">
+                                    <a asp-action="Details" asp-route-id="@v.Id" class="btn btn-outline-secondary" title="Протокол приёма">
+                                        <i class="bi bi-file-earmark-text"></i>
+                                    </a>
+
+                                    @if ((isVet || isAdmin) && v.Status != "Завершён" && v.Status != "Отменён")
+                                    {
+                                        <a asp-action="Conduct" asp-route-id="@v.Id" class="btn btn-teal" title="Провести приём / Назначения">
+                                            <i class="bi bi-clipboard2-pulse"></i>
+                                        </a>
+                                    }
+
+                                    @if (v.Status == "Запланирован")
+                                    {
+                                        <form asp-action="Cancel" asp-route-id="@v.Id" method="post" class="d-inline" onsubmit="return confirm('Отменить запись на приём?');">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-outline-danger" title="Отменить запись">
+                                                <i class="bi bi-x-circle"></i>
+                                            </button>
+                                        </form>
+                                    }
+
+                                    @if (isAdmin)
+                                    {
+                                        <form asp-action="Delete" asp-route-id="@v.Id" method="post" class="d-inline" onsubmit="return confirm('Удалить эту запись из базы?');">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-light border text-danger" title="Удалить запись">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

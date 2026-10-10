@@ -1,0 +1,118 @@
+@model VetClinic.ViewModels.VisitConductViewModel
+@{
+    ViewData["Title"] = $"Проведение приёма: {Model.PetName}";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="card card-custom p-4 bg-white border">
+            <div class="d-flex align-items-center gap-3 border-bottom pb-3 mb-4">
+                <div class="rounded-circle bg-teal text-white d-flex align-items-center justify-content-center fs-2" 
+                     style="width: 60px; height: 60px; background-color: #0d9488;">
+                    <i class="bi bi-clipboard2-pulse"></i>
+                </div>
+                <div>
+                    <h3 class="fw-bold mb-0 text-dark">Проведение ветеринарного приёма</h3>
+                    <p class="text-muted small mb-0">Внесение диагноза, схемы терапии и медицинских рекомендаций</p>
+                </div>
+            </div>
+
+            <!-- Patient Quick Info -->
+            <div class="p-3 bg-light rounded-3 border mb-4">
+                <div class="row g-2 small">
+                    <div class="col-md-3">
+                        <span class="text-muted d-block">Пациент:</span>
+                        <strong class="text-dark fs-6">@Model.PetName</strong>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="text-muted d-block">Вид и порода:</span>
+                        <span class="text-dark">@Model.PetSpeciesAndBreed</span>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="text-muted d-block">Владелец:</span>
+                        <span class="text-dark">@Model.OwnerName</span>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="text-muted d-block">Процедура:</span>
+                        <span class="text-dark fw-semibold">@Model.ServiceName</span>
+                    </div>
+                </div>
+            </div>
+
+            <form asp-action="Conduct" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="VisitId" />
+                <input type="hidden" asp-for="PetName" />
+                <input type="hidden" asp-for="PetSpeciesAndBreed" />
+                <input type="hidden" asp-for="OwnerName" />
+                <input type="hidden" asp-for="ServiceName" />
+                <input type="hidden" asp-for="VisitDate" />
+
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small mb-3"></div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Status" class="form-label fw-semibold"></label>
+                        <select asp-for="Status" class="form-select">
+                            <option value="Завершён">Завершён (приём окончен)</option>
+                            <option value="В процессе">В процессе (обследование / стационар)</option>
+                            <option value="Запланирован">Запланирован</option>
+                            <option value="Отменён">Отменён</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="TotalCost" class="form-label fw-semibold"></label>
+                        <div class="input-group">
+                            <input asp-for="TotalCost" class="form-control" type="number" step="50" min="0" />
+                            <span class="input-group-text">₽</span>
+                        </div>
+                        <span asp-validation-for="TotalCost" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Symptoms" class="form-label fw-semibold"></label>
+                    <textarea asp-for="Symptoms" class="form-control" rows="2" 
+                              placeholder="Анамнез, жалобы со слов владельца, клинические проявления"></textarea>
+                    <span asp-validation-for="Symptoms" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Diagnosis" class="form-label fw-semibold text-danger"></label>
+                    <textarea asp-for="Diagnosis" class="form-control" rows="2" 
+                              placeholder="Клинический диагноз, степень тяжести заболевания..."></textarea>
+                    <span asp-validation-for="Diagnosis" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Treatment" class="form-label fw-semibold text-primary"></label>
+                    <textarea asp-for="Treatment" class="form-control" rows="4" 
+                              placeholder="Назначенные препараты, дозировки, кратность и длительность приёма, диета, ограничения..."></textarea>
+                    <span asp-validation-for="Treatment" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="DoctorNotes" class="form-label fw-semibold"></label>
+                    <textarea asp-for="DoctorNotes" class="form-control" rows="2" 
+                              placeholder="Особые отметки, дата повторного осмотра, прогноз..."></textarea>
+                    <span asp-validation-for="DoctorNotes" class="text-danger small"></span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <a asp-action="Details" asp-route-id="@Model.VisitId" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Отмена
+                    </a>
+                    <button type="submit" class="btn btn-teal px-4">
+                        <i class="bi bi-check-circle-fill me-1"></i> Сохранить результаты приёма
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

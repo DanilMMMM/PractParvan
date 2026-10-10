@@ -1,0 +1,77 @@
+@model VetClinic.Models.Service
+@{
+    ViewData["Title"] = "Добавление услуги";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card card-custom p-4 bg-white border">
+            <div class="d-flex align-items-center gap-3 border-bottom pb-3 mb-4">
+                <div class="rounded-circle bg-teal text-white d-flex align-items-center justify-content-center fs-2" 
+                     style="width: 60px; height: 60px; background-color: #0d9488;">
+                    <i class="bi bi-tag-fill"></i>
+                </div>
+                <div>
+                    <h3 class="fw-bold mb-0 text-dark">Новая ветеринарная услуга</h3>
+                    <p class="text-muted small mb-0">Внесение услуги в официальный прейскурант клиники</p>
+                </div>
+            </div>
+
+            <form asp-action="ServiceCreate" method="post">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label fw-semibold"></label>
+                    <input asp-for="Name" class="form-control" placeholder="Например: Вакцинация Nobivac" />
+                    <span asp-validation-for="Name" class="text-danger small"></span>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Price" class="form-label fw-semibold"></label>
+                        <div class="input-group">
+                            <input asp-for="Price" class="form-control" type="number" step="50" min="0" placeholder="1500" />
+                            <span class="input-group-text">₽</span>
+                        </div>
+                        <span asp-validation-for="Price" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="DurationMinutes" class="form-label fw-semibold"></label>
+                        <div class="input-group">
+                            <input asp-for="DurationMinutes" class="form-control" type="number" step="5" min="5" placeholder="30" />
+                            <span class="input-group-text">мин</span>
+                        </div>
+                        <span asp-validation-for="DurationMinutes" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label fw-semibold"></label>
+                    <textarea asp-for="Description" class="form-control" rows="3" 
+                              placeholder="Подробное описание процедуры, что входит в услугу..."></textarea>
+                    <span asp-validation-for="Description" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-4 form-check">
+                    <input asp-for="IsActive" class="form-check-input" />
+                    <label asp-for="IsActive" class="form-check-label fw-semibold"></label>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <a asp-action="Services" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Отмена
+                    </a>
+                    <button type="submit" class="btn btn-teal px-4">
+                        <i class="bi bi-check2-circle me-1"></i> Создать услугу
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
